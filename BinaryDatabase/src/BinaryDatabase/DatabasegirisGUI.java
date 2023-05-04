@@ -29,7 +29,7 @@ import java.awt.Cursor;
 import java.awt.Frame;
 
 public class DatabasegirisGUI {
-
+// deneme72342378651376467851345273475768234757860234675812346780512734675812362525656256
 	private JFrame frmDatabaseLogn;
 	private JPasswordField passwordField;
 	private JTextField textField;

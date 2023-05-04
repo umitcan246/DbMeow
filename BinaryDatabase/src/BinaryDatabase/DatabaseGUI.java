@@ -66,7 +66,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
 
-
 public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;
@@ -193,6 +192,7 @@ public class DatabaseGUI {
 		updatepanel.setBackground(new Color(230, 230, 250));
 		JPanel deletepanel = new JPanel();
 		JPanel orderpanel = new JPanel();
+		orderpanel.setBackground(new Color(230, 230, 250));
 		
 		//NewTablePanel
 		newtablepanel.setBackground(new Color(240, 240, 255));
@@ -1376,19 +1376,19 @@ public class DatabaseGUI {
 		
 		
 		JComboBox OrderComboBox = new JComboBox();
-		OrderComboBox.setBounds(20, 48, 182, 21);
+		OrderComboBox.setBounds(123, 48, 182, 21);
 		orderpanel.add(OrderComboBox);
 		
 		JComboBox combo = new JComboBox();
 		combo.setModel(new DefaultComboBoxModel(new String[] {"By ID", "By Offset"}));
-		combo.setBounds(20, 124, 182, 21);
+		combo.setBounds(123, 124, 182, 21);
 		orderpanel.add(combo);
 
-		JButton btnNewButton_3_3_1 = new JButton("");
-		btnNewButton_3_3_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton_3_3_1.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/order_icon.png")));
-		btnNewButton_3_3_1.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "Order", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
-		btnNewButton_3_3_1.addActionListener(new ActionListener() {
+		JButton OrderBtn = new JButton("");
+		OrderBtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		OrderBtn.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/order_icon.png")));
+		OrderBtn.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "Order", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
+		OrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -1405,11 +1405,11 @@ public class DatabaseGUI {
 				
 			}
 		});
-		btnNewButton_3_3_1.setVisible(false);
-		btnNewButton_3_3_1.setFont(new Font("Dubai", Font.BOLD, 10));
-		btnNewButton_3_3_1.setBackground(new Color(230, 230, 250));
-		btnNewButton_3_3_1.setBounds(702, 528, 100, 48);
-		frmDatabase.getContentPane().add(btnNewButton_3_3_1);
+		OrderBtn.setVisible(false);
+		OrderBtn.setFont(new Font("Dubai", Font.BOLD, 10));
+		OrderBtn.setBackground(new Color(230, 230, 250));
+		OrderBtn.setBounds(702, 528, 100, 48);
+		frmDatabase.getContentPane().add(OrderBtn);
 
 		JButton btnInsertTable = new JButton("Upload Table");
 		btnInsertTable.setBorder(new EmptyBorder(0, 0, 0, 0));
@@ -1438,7 +1438,7 @@ public class DatabaseGUI {
 							btnTableData.setVisible(true);
 							btnNewButton_3.setVisible(true);
 							btnNewButton_3_3.setVisible(true);
-							btnNewButton_3_3_1.setVisible(true);
+							OrderBtn.setVisible(true);
 							btnViewTable.doClick();
 							
 						
@@ -1477,7 +1477,7 @@ public class DatabaseGUI {
 				btnTableData.setVisible(false);
 				btnNewButton_3.setVisible(false);
 				btnNewButton_3_3.setVisible(false);
-				btnNewButton_3_3_1.setVisible(false);
+				OrderBtn.setVisible(false);
 				panel_1.setSize(0, 0);
 
 			}
@@ -1569,6 +1569,7 @@ public class DatabaseGUI {
 		
 		
 		JButton DescendingButton = new JButton("Descending Order");
+		DescendingButton.setBackground(new Color(230, 230, 250));
 		DescendingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -1644,11 +1645,12 @@ public class DatabaseGUI {
 			}
 		});
 		DescendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
-		DescendingButton.setBounds(319, 43, 131, 30);
+		DescendingButton.setBounds(422, 43, 131, 30);
 		orderpanel.add(DescendingButton);
 		
 		
 		JButton AscendingButton = new JButton("Ascending Order");
+		AscendingButton.setBackground(new Color(230, 230, 250));
 		AscendingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -1726,7 +1728,7 @@ public class DatabaseGUI {
 				}
 			});
 		AscendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
-		AscendingButton.setBounds(319, 115, 131, 30);
+		AscendingButton.setBounds(422, 115, 131, 30);
 		orderpanel.add(AscendingButton);
 		JPanel addallpanel = new JPanel();
 		addallpanel.setBackground(new Color(230, 230, 250));
@@ -2041,7 +2043,7 @@ public class DatabaseGUI {
 					btnTableData.setVisible(true);
 					btnNewButton_3.setVisible(true);
 					btnNewButton_3_3.setVisible(true);
-					btnNewButton_3_3_1.setVisible(true);
+					OrderBtn.setVisible(true);
 					btnViewTable.doClick();
 					
 					}

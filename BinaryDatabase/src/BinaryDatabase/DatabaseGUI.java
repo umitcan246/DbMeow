@@ -66,7 +66,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
 
-//yine olmadı...
+//bu sefer oldu gibi...
 public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;

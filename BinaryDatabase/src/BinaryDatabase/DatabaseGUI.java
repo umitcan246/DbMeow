@@ -65,6 +65,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
+
+//kemal duru
 public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;

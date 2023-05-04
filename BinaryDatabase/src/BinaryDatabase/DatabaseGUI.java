@@ -1761,6 +1761,7 @@ public class DatabaseGUI {
 			addallpanel.setSize(752,200);
 			progressBar.setVisible(false);
 			progressBar.setValue(0);
+			panel.setSize(0,0);
 			
 				
 			}
@@ -1885,7 +1886,7 @@ public class DatabaseGUI {
 						if(columarr[k][1].equals("int")) {
 							
 							 	int min = 10; // 2 basamaklı sayılar için minimum değer
-						        int max = 99999; // 6 basamaklı sayılar için maksimum değer
+						        int max = 100; // 6 basamaklı sayılar için maksimum değer
 						        int randomNumber = rand.nextInt((max - min) + 1) + min;
 						        
 						        arr[k] = randomNumber+"";
@@ -1949,10 +1950,11 @@ public class DatabaseGUI {
 				    }
 				});
 		
-
+				howmany.setText("");
 				addDataThread.start();
 				updateProgressBarThread.start();
 				progressBar.setValue(0);
+				btnViewTable.doClick();
 			}
 		
 			

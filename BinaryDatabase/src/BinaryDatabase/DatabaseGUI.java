@@ -67,15 +67,8 @@ import javax.swing.border.EtchedBorder;
 
 
 
-//yine olmadı...
-
-//bu sefer oldu gibi...
-
 public class DatabaseGUI {
 
-
-	
-	// olacak olacak olcak
 	protected static final String NumberUtils = null;
 	private JFrame frmDatabase;
 	private JFrame frame1;

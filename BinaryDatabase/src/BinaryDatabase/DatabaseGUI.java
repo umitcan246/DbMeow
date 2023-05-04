@@ -66,9 +66,9 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
 
-
+//kemal durudfğphdfphodfğpoh
 public class DatabaseGUI {
-// artık olsun noluuurrr
+
 	protected static final String NumberUtils = null;
 	private JFrame frmDatabase;
 	private JFrame frame1;

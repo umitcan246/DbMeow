@@ -186,6 +186,7 @@ public class DatabaseGUI {
 		panel.setBorder(null);
 		JPanel newtablepanel = new JPanel();
 		JPanel searchpanel = new JPanel();
+		searchpanel.setBackground(new Color(230, 230, 250));
 		JPanel updatepanel = new JPanel();
 		updatepanel.setBackground(new Color(230, 230, 250));
 		JPanel deletepanel = new JPanel();
@@ -708,7 +709,8 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(searchpanel);
 		searchpanel.setLayout(null);
 
-		JButton btnSearchByID = new JButton("Search ");
+		JButton btnSearchByID = new JButton("Search");
+		btnSearchByID.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
 		btnSearchByID.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -765,19 +767,19 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByID.setBounds(278, 82, 142, 30);
+		btnSearchByID.setBounds(371, 97, 142, 30);
 		searchpanel.add(btnSearchByID);
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
-		btnSearchByID.setBackground(Color.PINK);
+		btnSearchByID.setBackground(new Color(230, 230, 250));
 
 		searchid = new JTextField();
-		searchid.setBounds(202, 26, 158, 20);
+		searchid.setBounds(289, 51, 158, 20);
 		searchpanel.add(searchid);
 		searchid.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("ID : ");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(95, 29, 97, 20);
+		lblNewLabel_1.setBounds(182, 54, 97, 20);
 		searchpanel.add(lblNewLabel_1);
 		searchpanel.setVisible(false);
 
@@ -804,6 +806,7 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(btnTableData);
 
 		JButton btnSearchByOffset = new JButton("Search By Offset");
+		btnSearchByOffset.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
 		btnSearchByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -860,10 +863,10 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByOffset.setBounds(140, 82, 128, 30);
+		btnSearchByOffset.setBounds(233, 97, 128, 30);
 		searchpanel.add(btnSearchByOffset);
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
-		btnSearchByOffset.setBackground(Color.PINK);
+		btnSearchByOffset.setBackground(new Color(230, 230, 250));
 
 		
 		btnViewTable.addActionListener(new ActionListener() {
@@ -1454,7 +1457,7 @@ public class DatabaseGUI {
 		});
 		btnInsertTable.setFont(new Font("Georgia", Font.BOLD, 14));
 		btnInsertTable.setBackground(new Color(230, 230, 250));
-		btnInsertTable.setBounds(610, 11, 173, 40);
+		btnInsertTable.setBounds(320, 11, 173, 40);
 		frmDatabase.getContentPane().add(btnInsertTable);
 
 		JButton btnInsertTable_1 = new JButton("");
@@ -2064,6 +2067,12 @@ public class DatabaseGUI {
 		btnNewButton_1.setBackground(new Color(50, 179, 200));
 		btnNewButton_1.setBounds(581, 430, 161, 46);
 		newtablepanel.add(btnNewButton_1);
+		
+		JLabel lblNewLabel_4 = new JLabel("");
+		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_4.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
+		lblNewLabel_4.setBounds(746, 11, 45, 43);
+		frmDatabase.getContentPane().add(lblNewLabel_4);
 		
 	
 	

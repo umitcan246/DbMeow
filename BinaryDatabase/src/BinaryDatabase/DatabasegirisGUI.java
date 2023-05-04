@@ -49,7 +49,6 @@ public class DatabasegirisGUI {
 			}
 		});
 	}
-
 	/**
 	 * Create the application.
 	 */
@@ -131,8 +130,7 @@ public class DatabasegirisGUI {
 					System.out.println("giris basarili");
 					frmDatabaseLogn.dispose();
 					dbGUI.main(null);					
-				
-					
+
 				}
 				else {
 					
@@ -140,7 +138,6 @@ public class DatabasegirisGUI {
 						        JOptionPane.ERROR_MESSAGE);
 					 textField.setText("");
 					 passwordField.setText("");
-					
 				}
 				
 			}

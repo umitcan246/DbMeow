@@ -1415,7 +1415,7 @@ public class DatabaseGUI {
 		btnInsertTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				JFileChooser j = new JFileChooser("..\\Database");
+				JFileChooser j = new JFileChooser("..\\DbMeow");
 
 				// only show bin files
 				j.setFileFilter(new FileNameExtensionFilter("Binary Files", "bin"));

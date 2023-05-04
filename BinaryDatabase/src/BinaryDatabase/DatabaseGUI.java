@@ -66,7 +66,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 
 
-//kemal duru
+//kemal durudfğphdfphodfğpoh
 public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;

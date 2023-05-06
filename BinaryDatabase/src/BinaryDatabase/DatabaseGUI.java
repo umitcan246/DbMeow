@@ -1,5 +1,8 @@
 package BinaryDatabase;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Scanner;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -15,10 +18,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -59,12 +64,18 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Rectangle;
 import java.awt.Cursor;
+import java.awt.Desktop;
+
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JTextArea;
 
 
 public class DatabaseGUI {
@@ -130,6 +141,16 @@ public class DatabaseGUI {
 		});
 	}
 	
+	public void readTxtFile(String filename, JTextArea textArea) throws IOException {
+	    FileReader fr = new FileReader(filename);
+	    BufferedReader br = new BufferedReader(fr);
+	    String line;
+	    while ((line = br.readLine()) != null) {
+	        textArea.append(line + "\n");
+	    }
+	    br.close();
+	    fr.close();
+	}
 	
 
 	/**
@@ -712,12 +733,11 @@ public class DatabaseGUI {
 		panel_1.setLayout(null);
 
 		//Search Panel
-		searchpanel.setBounds(43, 321, 752, 200);
+		searchpanel.setBounds(43, 321, 0, 0);
 		frmDatabase.getContentPane().add(searchpanel);
-		searchpanel.setLayout(null);
 
 		JButton btnSearchByID = new JButton("Search");
-		btnSearchByID.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
+		btnSearchByID.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By ID", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByID.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -774,27 +794,19 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByID.setBounds(161, 97, 142, 30);
-		searchpanel.add(btnSearchByID);
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByID.setBackground(new Color(230, 230, 250));
 
 		searchid = new JTextField();
-		searchid.setBounds(79, 51, 158, 20);
-		searchpanel.add(searchid);
 		searchid.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("ID : ");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(0, 54, 69, 20);
-		searchpanel.add(lblNewLabel_1);
 		searchpanel.setVisible(false);
 		
 		JComboBox ColNameBox = new JComboBox();
 		
 		ColNameBox.setToolTipText("");
-		ColNameBox.setBounds(444, 50, 97, 22);
-		searchpanel.add(ColNameBox);
 
 		JButton btnTableData = new JButton("");
 		btnTableData.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -827,8 +839,8 @@ public class DatabaseGUI {
 		btnTableData.setBounds(372, 528, 100, 48);
 		frmDatabase.getContentPane().add(btnTableData);
 
-		JButton btnSearchByOffset = new JButton("Search By Offset");
-		btnSearchByOffset.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
+		JButton btnSearchByOffset = new JButton("Search ");
+		btnSearchByOffset.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By Offset", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -885,21 +897,17 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByOffset.setBounds(23, 97, 128, 30);
-		searchpanel.add(btnSearchByOffset);
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByOffset.setBackground(new Color(230, 230, 250));
 		
 		JLabel lblNewLabel_5 = new JLabel("Search:");
-		lblNewLabel_5.setBounds(551, 11, 87, 30);
-		searchpanel.add(lblNewLabel_5);
 		
 		searchByColumText = new JTextField();
-		searchByColumText.setBounds(551, 51, 128, 20);
-		searchpanel.add(searchByColumText);
 		searchByColumText.setColumns(10);
 		
-		JButton SearchColmBtn = new JButton("Search by colum");
+		JButton SearchColmBtn = new JButton("Search by");
+		SearchColmBtn.setFont(new Font("Dubai", Font.BOLD, 10));
+		SearchColmBtn.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Colum Name", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, new Color(0, 0, 0)));
 		SearchColmBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean error =false;
@@ -965,9 +973,63 @@ public class DatabaseGUI {
 				}
 				
 			}});
-		
-		SearchColmBtn.setBounds(517, 100, 121, 23);
-		searchpanel.add(SearchColmBtn);
+		GroupLayout gl_searchpanel = new GroupLayout(searchpanel);
+		gl_searchpanel.setHorizontalGroup(
+			gl_searchpanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_searchpanel.createSequentialGroup()
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(551)
+							.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(10)
+									.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+									.addComponent(searchid, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(23)
+									.addComponent(btnSearchByOffset, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+									.addGap(35)
+									.addComponent(btnSearchByID, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)))
+							.addGap(116)
+							.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addComponent(ColNameBox, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(searchByColumText, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(55)
+									.addComponent(SearchColmBtn, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)))))
+					.addGap(73))
+		);
+		gl_searchpanel.setVerticalGroup(
+			gl_searchpanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_searchpanel.createSequentialGroup()
+					.addGap(28)
+					.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+					.addGap(4)
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(searchid, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(ColNameBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(searchByColumText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(25)
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(SearchColmBtn, 0, 0, Short.MAX_VALUE))
+						.addComponent(btnSearchByOffset, 0, 0, Short.MAX_VALUE)
+						.addComponent(btnSearchByID, GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		searchpanel.setLayout(gl_searchpanel);
 		
 		
 	
@@ -2241,14 +2303,30 @@ public class DatabaseGUI {
 		btnNewButton_1.setBackground(new Color(50, 179, 200));
 		btnNewButton_1.setBounds(581, 430, 161, 46);
 		newtablepanel.add(btnNewButton_1);
+
+		JButton Helpbtn = new JButton("");
+		Helpbtn.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		       
+		    	  
+		    	        try {
+		    	            File htmlFile = new File("help/index_help.html");
+		    	            Desktop.getDesktop().browse(htmlFile.toURI());
+		    	        } catch (IOException ex) {
+		    	            ex.printStackTrace();
+		    	        }
+		    	    }
+		    
+		    
+		});
+		Helpbtn.setHorizontalAlignment(SwingConstants.CENTER);
+		Helpbtn.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
+		Helpbtn.setBounds(746, 11, 45, 43);
+		frmDatabase.getContentPane().add(Helpbtn);
 		
-		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
-		lblNewLabel_4.setBounds(746, 11, 45, 43);
-		frmDatabase.getContentPane().add(lblNewLabel_4);
 		
-	
+		
+		
 	
 			}
 }

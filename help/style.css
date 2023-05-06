@@ -1,0 +1,109 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+body {
+  background-color: whitesmoke;
+}
+#homepage {
+  border-style: solid;
+  width: 900px;
+  min-height: 800px;
+  margin: auto;
+}
+#banner {
+  border-style: solid;
+  width: 896px;
+  min-height: 100px;
+  background-color: rgb(195, 230, 236);
+}
+#logo {
+  border: solid;
+  border-width: 2px;
+  border-radius: 10px;
+  width: 100px;
+  height: 80px;
+  float: left;
+  position: relative;
+  top: 5px;
+  left: 20px;
+}
+#img1 {
+  width: 100px;
+  height: 80px;
+}
+#socialLogo {
+  width: 300px;
+  height: 60px;
+  float: right;
+  position: relative;
+  top: 20px;
+  right: 10px;
+}
+#img2 {
+  width: 60px;
+  height: 60px;
+  float: right;
+  position: relative;
+  margin-right: 10px;
+}
+#mainmenu {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 12;
+  font-weight: bold;
+  text-decoration: none;
+}
+#mainmenu ul {
+  list-style-type: none;
+}
+#mainmenu ul li {
+  width: 150px;
+  height: 30px;
+  border-style: solid;
+  border-radius: 10px;
+  border-width: 3px;
+  border-color: blue;
+  background-color: white;
+  float: left;
+
+  position: relative;
+  top: 25px;
+  margin-left: 100px;
+  text-align: center;
+}
+#mainMenuDiv {
+  border: solid;
+  border-width: 2px;
+  border-radius: 1px;
+  background-color: rgb(90, 227, 252);
+  width: 900px;
+  height: 90px;
+  float: left;
+}
+#mainmenu ul li a {
+  text-emphasis: none;
+  text-decoration: none;
+  position: relative;
+  top: 4px;
+  font-weight: bold;
+}
+#mainmenu ul li a:link {
+  color: blue;
+}
+#mainmenu ul li a:visited {
+  color: blue;
+}
+#mainmenu ul li a:hover {
+  color: crimson;
+  font-size: large;
+}
+#content {
+  border-style: solid;
+  width: 900px;
+  height: 600px;
+  background-color: rgb(212, 205, 212);
+  float: left;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: black;
+  font-size: large;
+}

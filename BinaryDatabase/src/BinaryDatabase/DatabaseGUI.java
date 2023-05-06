@@ -219,6 +219,9 @@ public class DatabaseGUI {
 		deletepanel.setBackground(new Color(230, 230, 250));
 		JPanel orderpanel = new JPanel();
 		orderpanel.setBackground(new Color(230, 230, 250));
+		JPanel addallpanel = new JPanel();
+		addallpanel.setBackground(new Color(230, 230, 250));
+		
 		
 		//NewTablePanel
 		newtablepanel.setBackground(new Color(240, 240, 255));
@@ -489,6 +492,7 @@ public class DatabaseGUI {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				panel_1.setVisible(false);
 				deletepanel.setVisible(false);
@@ -828,6 +832,7 @@ public class DatabaseGUI {
 				}
 				//
 				
+				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -1045,6 +1050,7 @@ public class DatabaseGUI {
 		btnViewTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -1284,6 +1290,8 @@ public class DatabaseGUI {
 		btnNewButton_3.setVisible(false);
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -1556,6 +1564,7 @@ public class DatabaseGUI {
 		btnNewButton_3_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
+				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				updatepanel.setVisible(false);
@@ -1573,7 +1582,7 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(btnNewButton_3_3);
 		
 		
-		orderpanel.setBounds(31, 321, 752, 200);
+		orderpanel.setBounds(31, 321, 0, 0);
 		frmDatabase.getContentPane().add(orderpanel);
 		orderpanel.setLayout(null);
 		
@@ -1595,6 +1604,9 @@ public class DatabaseGUI {
 		OrderBtn.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "Order", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
 		OrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				addallpanel.setVisible(false);
+				searchpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
 				newtablepanel.setVisible(false);
@@ -1692,6 +1704,7 @@ public class DatabaseGUI {
 		btnInsertTable_1.setBorder(new EmptyBorder(0, 0, 0, 0));
 		btnInsertTable_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				updatepanel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -1961,11 +1974,12 @@ public class DatabaseGUI {
 		AscendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
 		AscendingButton.setBounds(422, 115, 131, 30);
 		orderpanel.add(AscendingButton);
-		JPanel addallpanel = new JPanel();
+		//addallpanel
 		addallpanel.setBackground(new Color(230, 230, 250));
 		addallpanel.setBounds(43, 304, 0, 0);
 		frmDatabase.getContentPane().add(addallpanel);
 		addallpanel.setLayout(null);
+		addallpanel.setVisible(true);
 		
 		
 		JProgressBar progressBar = new JProgressBar();
@@ -1992,6 +2006,7 @@ public class DatabaseGUI {
 			public void actionPerformed(ActionEvent e) {
 				
 			addallpanel.setSize(752,200);
+			addallpanel.setVisible(true);
 			progressBar.setVisible(false);
 			progressBar.setValue(0);
 			panel.setSize(0,0);

@@ -1,5 +1,8 @@
 package BinaryDatabase;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Scanner;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -15,10 +18,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -46,6 +51,7 @@ import javax.swing.JFileChooser;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -58,12 +64,18 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Rectangle;
 import java.awt.Cursor;
+import java.awt.Desktop;
+
 import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.JTextArea;
 
 
 public class DatabaseGUI {
@@ -111,6 +123,7 @@ public class DatabaseGUI {
 	private JTextField update9;
 	private JTextField deleteid;
 	private JTextField howmany;
+	private JTextField searchByColumText;
 
 	/**
 	 * Launch the application.
@@ -127,6 +140,18 @@ public class DatabaseGUI {
 			}
 		});
 	}
+	
+	public void readTxtFile(String filename, JTextArea textArea) throws IOException {
+	    FileReader fr = new FileReader(filename);
+	    BufferedReader br = new BufferedReader(fr);
+	    String line;
+	    while ((line = br.readLine()) != null) {
+	        textArea.append(line + "\n");
+	    }
+	    br.close();
+	    fr.close();
+	}
+	
 
 	/**
 	 * Create the application.
@@ -175,7 +200,7 @@ public class DatabaseGUI {
 		frmDatabase = new JFrame("binary file search");
 		frmDatabase.getContentPane().setBackground(new Color(230, 230, 250));
 		frmDatabase.setResizable(false);
-		frmDatabase.setTitle("DataBase");
+		frmDatabase.setTitle("DBMeow");
 		frmDatabase.setType(Type.UTILITY);
 		frmDatabase.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDatabase.setPreferredSize(new Dimension(800, 600)); // pencere boyutu
@@ -191,6 +216,7 @@ public class DatabaseGUI {
 		JPanel updatepanel = new JPanel();
 		updatepanel.setBackground(new Color(230, 230, 250));
 		JPanel deletepanel = new JPanel();
+		deletepanel.setBackground(new Color(230, 230, 250));
 		JPanel orderpanel = new JPanel();
 		orderpanel.setBackground(new Color(230, 230, 250));
 		
@@ -709,10 +735,9 @@ public class DatabaseGUI {
 		//Search Panel
 		searchpanel.setBounds(43, 321, 0, 0);
 		frmDatabase.getContentPane().add(searchpanel);
-		searchpanel.setLayout(null);
 
 		JButton btnSearchByID = new JButton("Search");
-		btnSearchByID.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
+		btnSearchByID.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By ID", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByID.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -769,21 +794,19 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByID.setBounds(371, 97, 142, 30);
-		searchpanel.add(btnSearchByID);
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByID.setBackground(new Color(230, 230, 250));
 
 		searchid = new JTextField();
-		searchid.setBounds(289, 51, 158, 20);
-		searchpanel.add(searchid);
 		searchid.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("ID : ");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(182, 54, 97, 20);
-		searchpanel.add(lblNewLabel_1);
 		searchpanel.setVisible(false);
+		
+		JComboBox ColNameBox = new JComboBox();
+		
+		ColNameBox.setToolTipText("");
 
 		JButton btnTableData = new JButton("");
 		btnTableData.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -792,6 +815,15 @@ public class DatabaseGUI {
 		btnTableData.setVisible(false);
 		btnTableData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ColNameBox.removeAllItems();
+				String colname[] = new String[Database.getTable(name).columns.length];
+				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
+					
+					colname[i] =Database.getTable(name).columns[i].name.toString();
+					ColNameBox.addItem(colname[i]);
+				}
+				//
+				
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -807,8 +839,8 @@ public class DatabaseGUI {
 		btnTableData.setBounds(372, 528, 100, 48);
 		frmDatabase.getContentPane().add(btnTableData);
 
-		JButton btnSearchByOffset = new JButton("Search By Offset");
-		btnSearchByOffset.setBorder(new LineBorder(new Color(0, 191, 255), 4, true));
+		JButton btnSearchByOffset = new JButton("Search ");
+		btnSearchByOffset.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By Offset", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -865,10 +897,150 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByOffset.setBounds(233, 97, 128, 30);
-		searchpanel.add(btnSearchByOffset);
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByOffset.setBackground(new Color(230, 230, 250));
+		
+		JLabel lblNewLabel_5 = new JLabel("Search:");
+		
+		searchByColumText = new JTextField();
+		searchByColumText.setColumns(10);
+		
+		JButton SearchColmBtn = new JButton("Search by");
+		SearchColmBtn.setFont(new Font("Dubai", Font.BOLD, 10));
+		SearchColmBtn.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Colum Name", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, new Color(0, 0, 0)));
+		SearchColmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean error =false;
+				
+				if (!searchByColumText.getText().equals("") ) {
+					String selectedValue = ColNameBox.getSelectedItem().toString();
+					String SearchText = searchByColumText.getText().toString();
+					String[] arr = new String[Database.getTable(name).columns.length];
+					
+					try {
+					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
+					String temparr[][] = new String[1][Database.getTable(name).columns.length];
+					String colname[] = new String[Database.getTable(name).columns.length];
+
+					String columarr[][] = new String[Database.getTable(name).columns.length][2];
+
+					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+
+						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
+						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
+
+					}
+
+					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+						temparr[0][i] = arr[i];
+						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
+					}
+
+					panel_1.removeAll();
+					JTable table = new JTable(temparr, colname);
+					Font font = new Font("Arial", Font.PLAIN, 15); 
+					CustomCellRenderer renderer = new CustomCellRenderer(font);
+					for (int c = 0; c < table.getColumnCount(); c++) {
+					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					   
+					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					}
+					    JTableHeader headera = table.getTableHeader();
+				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+
+				        // Başlık kısmının kenarlığını ayarlama
+				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
+
+					JTableHeader header = table.getTableHeader();
+					panel_1.setLayout(new BorderLayout());
+					panel_1.add(header, BorderLayout.NORTH);
+					panel_1.add(table, BorderLayout.CENTER);
+					panel_1.revalidate();
+					panel_1.repaint();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					
+						
+				
+			}
+				
+				else {
+					
+					System.out.println("Boş olamaz...!");
+				}
+				
+			}});
+		GroupLayout gl_searchpanel = new GroupLayout(searchpanel);
+		gl_searchpanel.setHorizontalGroup(
+			gl_searchpanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_searchpanel.createSequentialGroup()
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(551)
+							.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(10)
+									.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 69, GroupLayout.PREFERRED_SIZE)
+									.addComponent(searchid, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(23)
+									.addComponent(btnSearchByOffset, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+									.addGap(35)
+									.addComponent(btnSearchByID, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE)))
+							.addGap(116)
+							.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addComponent(ColNameBox, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE)
+									.addGap(10)
+									.addComponent(searchByColumText, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_searchpanel.createSequentialGroup()
+									.addGap(55)
+									.addComponent(SearchColmBtn, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)))))
+					.addGap(73))
+		);
+		gl_searchpanel.setVerticalGroup(
+			gl_searchpanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_searchpanel.createSequentialGroup()
+					.addGap(28)
+					.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+					.addGap(4)
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(searchid, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(ColNameBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(searchByColumText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addGap(25)
+					.addGroup(gl_searchpanel.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_searchpanel.createSequentialGroup()
+							.addGap(1)
+							.addComponent(SearchColmBtn, 0, 0, Short.MAX_VALUE))
+						.addComponent(btnSearchByOffset, 0, 0, Short.MAX_VALUE)
+						.addComponent(btnSearchByID, GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		searchpanel.setLayout(gl_searchpanel);
+		
+		
+	
+		
+		
+		 
+		
+		
+		
+		
+		
 
 		
 		btnViewTable.addActionListener(new ActionListener() {
@@ -883,6 +1055,7 @@ public class DatabaseGUI {
 				
 				panel_1.setSize(752, 230);
 				panel_1.setVisible(true);
+				
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
 				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -1153,7 +1326,7 @@ public class DatabaseGUI {
 					columarr[i][1] = Database.getTable(name).columns[i].type.toString();
 
 				}
-
+				
 				String dataarr[][] = null;
 
 				try {
@@ -1166,8 +1339,13 @@ public class DatabaseGUI {
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
+					
+					
 
 				}
+				
+				
+				
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 					if (i == 1) {
@@ -1186,7 +1364,7 @@ public class DatabaseGUI {
 					}
 
 				}
-
+				
 			}
 		});
 		btnSearch.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1253,7 +1431,9 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(deletepanel);
 		deletepanel.setLayout(null);
 
-		JButton btnSearch_1 = new JButton("Search");
+		JButton btnSearch_1 = new JButton("");
+		btnSearch_1.setBorder(new EmptyBorder(0, 0, 0, 0));
+		btnSearch_1.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update.png")));
 		btnSearch_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -1280,32 +1460,58 @@ public class DatabaseGUI {
 						temparr[0][i] = arr[i];
 						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 					}
+					panel_1.removeAll();
+					JTable table = new JTable(temparr, colname);
+					Font font = new Font("Arial", Font.PLAIN, 15); 
+					CustomCellRenderer renderer = new CustomCellRenderer(font);
+					for (int c = 0; c < table.getColumnCount(); c++) {
+					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					   
+					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					}
+					    JTableHeader headera = table.getTableHeader();
+				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
 
-					btnViewTable.doClick();
+				        // Başlık kısmının kenarlığını ayarlama
+				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
+
+					JTableHeader header = table.getTableHeader();
+					panel_1.setLayout(new BorderLayout());
+					panel_1.add(header, BorderLayout.NORTH);
+					panel_1.add(table, BorderLayout.CENTER);
+					panel_1.revalidate();
+					panel_1.repaint();
 					
-				} catch (ClassNotFoundException | IOException e1) {
+
+				}
+				
+					
+				 catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 
 			}
 		});
 		btnSearch_1.setFont(new Font("Dubai", Font.BOLD, 10));
-		btnSearch_1.setBackground(Color.PINK);
-		btnSearch_1.setBounds(159, 25, 66, 20);
+		btnSearch_1.setBackground(new Color(230, 230, 250));
+		btnSearch_1.setBounds(410, 48, 58, 40);
 		deletepanel.add(btnSearch_1);
 
 		deleteid = new JTextField();
 		deleteid.setColumns(10);
-		deleteid.setBounds(87, 24, 66, 20);
+		deleteid.setBounds(340, 59, 66, 20);
 		deletepanel.add(deleteid);
 
 		JLabel lblNewLabel_2_10_1 = new JLabel("ID : ");
 		lblNewLabel_2_10_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2_10_1.setBounds(38, 24, 46, 20);
+		lblNewLabel_2_10_1.setBounds(291, 59, 46, 20);
 		deletepanel.add(lblNewLabel_2_10_1);
 
-		JButton deleteDataById = new JButton("deleteDataById");
+		JButton deleteDataById = new JButton("By Id");
+		deleteDataById.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Delete Data", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		deleteDataById.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -1320,11 +1526,12 @@ public class DatabaseGUI {
 			}
 		});
 		deleteDataById.setFont(new Font("Dubai", Font.BOLD, 10));
-		deleteDataById.setBackground(Color.PINK);
-		deleteDataById.setBounds(10, 159, 139, 20);
+		deleteDataById.setBackground(new Color(230, 230, 250));
+		deleteDataById.setBounds(267, 104, 100, 40);
 		deletepanel.add(deleteDataById);
 
-		JButton deleteDataByOffset = new JButton("deleteDataByOffset");
+		JButton deleteDataByOffset = new JButton("ByOffset");
+		deleteDataByOffset.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Delete Data", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		deleteDataByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -1339,8 +1546,8 @@ public class DatabaseGUI {
 			}
 		});
 		deleteDataByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
-		deleteDataByOffset.setBackground(Color.PINK);
-		deleteDataByOffset.setBounds(159, 159, 145, 20);
+		deleteDataByOffset.setBackground(new Color(230, 230, 250));
+		deleteDataByOffset.setBounds(390, 104, 100, 40);
 		deletepanel.add(deleteDataByOffset);
 
 		JButton btnNewButton_3_3 = new JButton("");
@@ -1394,7 +1601,7 @@ public class DatabaseGUI {
 				deletepanel.setVisible(false);
 				newtablepanel.setVisible(false);
 				updatepanel.setVisible(false);
-				orderpanel.setSize(752,225);
+				orderpanel.setSize(752,200);
 				orderpanel.setVisible(true);
 				
 				
@@ -1405,22 +1612,40 @@ public class DatabaseGUI {
 				
 			}
 		});
+		class MetadataFileFilter extends FileFilter {
+		    @Override
+		    public boolean accept(File f) {
+		        if (f.isDirectory()) {
+		            return true;
+		        }
+		        String name = f.getName().toLowerCase();
+		        return name.endsWith("_metadata.bin");
+		    }
+
+		    @Override
+		    public String getDescription() {
+		        return "Metadata files (bin)";
+		    }
+		}
+		
 		OrderBtn.setVisible(false);
 		OrderBtn.setFont(new Font("Dubai", Font.BOLD, 10));
 		OrderBtn.setBackground(new Color(230, 230, 250));
 		OrderBtn.setBounds(702, 528, 100, 48);
 		frmDatabase.getContentPane().add(OrderBtn);
-
+		
 		JButton btnInsertTable = new JButton("Upload Table");
 		btnInsertTable.setBorder(new EmptyBorder(0, 0, 0, 0));
 		btnInsertTable.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/upload.png")));
 		btnInsertTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				
+				
 				JFileChooser j = new JFileChooser("..\\DbMeow");
-
+				j.setAcceptAllFileFilterUsed(false); // Disable "All files" filter
 				// only show bin files
-				j.setFileFilter(new FileNameExtensionFilter("Binary Files", "bin"));
+				j.setFileFilter(new MetadataFileFilter());
+
 				int secim = j.showOpenDialog(JOptionPane.getRootFrame());
 				if (secim == JFileChooser.APPROVE_OPTION) {
 					File file = j.getSelectedFile();
@@ -1454,9 +1679,12 @@ public class DatabaseGUI {
 					
 
 				}
+				
 			}
-
+			
 		});
+		
+		
 		btnInsertTable.setFont(new Font("Georgia", Font.BOLD, 14));
 		btnInsertTable.setBackground(new Color(230, 230, 250));
 		btnInsertTable.setBounds(320, 11, 173, 40);
@@ -1569,6 +1797,7 @@ public class DatabaseGUI {
 		
 		
 		JButton DescendingButton = new JButton("Descending Order");
+		DescendingButton.setBorder(new LineBorder(new Color(0, 191, 255), 3, true));
 		DescendingButton.setBackground(new Color(230, 230, 250));
 		DescendingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1650,6 +1879,7 @@ public class DatabaseGUI {
 		
 		
 		JButton AscendingButton = new JButton("Ascending Order");
+		AscendingButton.setBorder(new LineBorder(new Color(0, 191, 255), 3, true));
 		AscendingButton.setBackground(new Color(230, 230, 250));
 		AscendingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1841,7 +2071,7 @@ public class DatabaseGUI {
             @Override
             public void focusGained(FocusEvent e) {
                 
-            	System.out.println("bişey");
+            	//System.out.println("bişey");
             }
             @Override
             public void focusLost(FocusEvent e) {
@@ -2073,17 +2303,34 @@ public class DatabaseGUI {
 		btnNewButton_1.setBackground(new Color(50, 179, 200));
 		btnNewButton_1.setBounds(581, 430, 161, 46);
 		newtablepanel.add(btnNewButton_1);
+
+		JButton Helpbtn = new JButton("");
+		Helpbtn.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		       
+		    	  
+		    	        try {
+		    	            File htmlFile = new File("help/index_help.html");
+		    	            Desktop.getDesktop().browse(htmlFile.toURI());
+		    	        } catch (IOException ex) {
+		    	            ex.printStackTrace();
+		    	        }
+		    	    }
+		    
+		    
+		});
+		Helpbtn.setHorizontalAlignment(SwingConstants.CENTER);
+		Helpbtn.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
+		Helpbtn.setBounds(746, 11, 45, 43);
+		frmDatabase.getContentPane().add(Helpbtn);
 		
-		JLabel lblNewLabel_4 = new JLabel("");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
-		lblNewLabel_4.setBounds(746, 11, 45, 43);
-		frmDatabase.getContentPane().add(lblNewLabel_4);
+		
+		
 		
 	
-	
 			}
-			}
+}
+			
 			
 		
 			

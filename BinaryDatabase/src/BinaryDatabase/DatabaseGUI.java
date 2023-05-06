@@ -746,6 +746,7 @@ public class DatabaseGUI {
 				String[] arr = new String[Database.getTable(name).columns.length];
 
 				try {
+					long startTime = System.currentTimeMillis();
 					arr = Database.seqSearchById(id, name);
 
 					String temparr[][] = new String[1][Database.getTable(name).columns.length];
@@ -787,6 +788,9 @@ public class DatabaseGUI {
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
+					long endTime = System.currentTimeMillis();
+					
+					JOptionPane.showMessageDialog(null, "Time consumed : " + (endTime-startTime) + "ms");
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -848,6 +852,7 @@ public class DatabaseGUI {
 				String[] arr = new String[Database.getTable(name).columns.length];
 
 				try {
+					long startTime = System.currentTimeMillis();
 					arr = Database.searchData(id, name);
 
 					String temparr[][] = new String[1][Database.getTable(name).columns.length];
@@ -889,6 +894,9 @@ public class DatabaseGUI {
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
+					long endtime = System.currentTimeMillis();
+					
+					 JOptionPane.showMessageDialog(null, "Time consumed : " + (endtime-startTime) + "ms");
 					
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1565,7 +1573,7 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(btnNewButton_3_3);
 		
 		
-		orderpanel.setBounds(31, 321, 0, 0);
+		orderpanel.setBounds(31, 321, 752, 200);
 		frmDatabase.getContentPane().add(orderpanel);
 		orderpanel.setLayout(null);
 		
@@ -1797,17 +1805,20 @@ public class DatabaseGUI {
 			String order = "descending";
 			
 			Object [][] data = null;
-			
+		
 			try {
-				
+				long endTime=0;
+				long startTime = System.currentTimeMillis();
 				if(combo.getSelectedIndex()== 0)
 				{
 					data = Database.OrderListById(name, secim, order);
+					 endTime = System.currentTimeMillis();
 				}
 				
 				else
 				{
 					data = Database.OrderListByIndex(name, secim, order);
+					 endTime = System.currentTimeMillis();
 				}
 				
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
@@ -1852,8 +1863,10 @@ public class DatabaseGUI {
                 
                 panel_1.revalidate();
                 panel_1.repaint();
-				
-				
+			
+                JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+                
+                
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -1942,9 +1955,7 @@ public class DatabaseGUI {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
-				
-				
-				
+			
 				}
 			});
 		AscendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
@@ -1952,7 +1963,7 @@ public class DatabaseGUI {
 		orderpanel.add(AscendingButton);
 		JPanel addallpanel = new JPanel();
 		addallpanel.setBackground(new Color(230, 230, 250));
-		addallpanel.setBounds(43, 304, 752, 200);
+		addallpanel.setBounds(43, 304, 0, 0);
 		frmDatabase.getContentPane().add(addallpanel);
 		addallpanel.setLayout(null);
 		
@@ -2165,12 +2176,13 @@ public class DatabaseGUI {
 					            progressBar.setValue(progress);
 					        });
 				    }
-					System.out.println("bilmem kac kere girdi");
+				
 					btnViewTable.doClick();
 					progressBar.setValue(0);
 					howmany.setText("");
 					progressBar.setValue(0);
 					btnNewButton_4.setEnabled(true);
+					
 				
 				});
 				Thread updateProgressBarThread = new Thread(() -> {

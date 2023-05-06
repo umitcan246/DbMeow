@@ -928,7 +928,7 @@ public class DatabaseGUI {
 				if (!searchByColumText.getText().equals("") ) {
 					String selectedValue = ColNameBox.getSelectedItem().toString();
 					String SearchText = searchByColumText.getText().toString();
-					String[] arr = new String[Database.getTable(name).columns.length];
+					String[][] arr = null;
 					
 					try {
 					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
@@ -945,12 +945,12 @@ public class DatabaseGUI {
 					}
 
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
-						temparr[0][i] = arr[i];
+						
 						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 					}
 
 					panel_1.removeAll();
-					JTable table = new JTable(temparr, colname);
+					JTable table = new JTable(arr, colname);
 					Font font = new Font("Arial", Font.PLAIN, 15); 
 					CustomCellRenderer renderer = new CustomCellRenderer(font);
 					for (int c = 0; c < table.getColumnCount(); c++) {

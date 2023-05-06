@@ -1,5 +1,6 @@
 package BinaryDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
@@ -919,14 +920,17 @@ public static void deleteDataById(int id , String tablename) throws FileNotFound
         e.printStackTrace();
     }	
 }
-public static String [] searchWordOrNuM(String colsName,String SearchText ,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
+public static String [][] searchWordOrNuM(String colsName,String SearchText ,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
 {
 	
 	
     String fileName = tablename;
-    
+    ArrayList<String[]> duplicates = new ArrayList<String[]>();
     Table xTable=getTable(fileName);
-    String[] searcharrWord = new String [xTable.columns.length];
+   
+    String[] searcharrWord = null;
+    
+    
     int currId=-1;
     int numInttype=xTable.counts.countInt;
     int numChartype=xTable.counts.countChar;
@@ -983,6 +987,7 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
         }
         
         int x=size;
+        
         while (recordsFile.getFilePointer() < recordsFile.length()) {
         	recordsFile.seek(x);
         	if(colType.equals("int") ) {
@@ -991,6 +996,7 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
         			found=true;
         			
         			recordsFile.seek((int)recordsFile.getFilePointer()- (size+INT_SIZE));
+        			 searcharrWord=new String [xTable.columns.length];
 	            	  for (int i = 0; i < numInttype + numChartype; i++) {
 	                  	
 	                      if (xTable.columns[i].type.equals("int")) {
@@ -1007,6 +1013,7 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
 	                       
 	                      }
 	                  }
+	            	  duplicates.add(searcharrWord);
 	            	  
 	             }
         		
@@ -1022,9 +1029,9 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
 	            	 found=true;
 	            	 recordsFile.seek((int)recordsFile.getFilePointer()- (size+CHAR_SIZE));	
 	            	
-	            	 
+	            	 searcharrWord=new String [xTable.columns.length];
 	            	  for (int i = 0; i < numInttype + numChartype; i++) {
-	                  	
+	            		 
 	                      if (xTable.columns[i].type.equals("int")) {
 	                          int value1 = recordsFile.readInt();
 	                          searcharrWord[i]=value1+"";
@@ -1040,6 +1047,7 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
 	                         
 	                      }
 	                  }
+	            	  duplicates.add(searcharrWord);
 	             }	
 	             
         	 }
@@ -1061,7 +1069,24 @@ public static String [] searchWordOrNuM(String colsName,String SearchText ,Strin
         
         System.out.println("Hata Bulundu.");
     }
-    return searcharrWord;
+    String [][]returnDup=new String[duplicates.size()][xTable.columns.length];
+    int i=0;
+    
+    
+    for (String[] array : duplicates) {
+    	int j=0;
+    	for (String element : array) {//This loop is used to iterate through the array inside the arraylist
+    		returnDup[i][j]=element;
+    		j++;
+        }
+    	i++;
+    }
+   /*for(int i =0 ; i<duplicates.size();i++) {
+	   for(int j =0 ; j<xTable.columns.length;j++) {
+		   returnDup[i][j]=duplicates.get(i).;
+	   }
+   }*/
+    return returnDup;
     
 }
 

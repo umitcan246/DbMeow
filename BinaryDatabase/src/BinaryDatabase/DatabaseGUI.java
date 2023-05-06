@@ -97,6 +97,7 @@ public class DatabaseGUI {
 	public int counter = 0;
 	public String name;
 	private JTable table_1;
+	public boolean isend;
 	public int progrescount;
 	public String[] SearchArrayTemp = null;
 	private JTextField textField;
@@ -201,7 +202,6 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().setBackground(new Color(230, 230, 250));
 		frmDatabase.setResizable(false);
 		frmDatabase.setTitle("DBMeow");
-		frmDatabase.setType(Type.UTILITY);
 		frmDatabase.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDatabase.setPreferredSize(new Dimension(800, 600)); // pencere boyutu
 		frmDatabase.setBounds(100, 100, 831, 628);
@@ -1032,15 +1032,6 @@ public class DatabaseGUI {
 		searchpanel.setLayout(gl_searchpanel);
 		
 		
-	
-		
-		
-		 
-		
-		
-		
-		
-		
 
 		
 		btnViewTable.addActionListener(new ActionListener() {
@@ -1055,7 +1046,7 @@ public class DatabaseGUI {
 				
 				panel_1.setSize(752, 230);
 				panel_1.setVisible(true);
-				
+				System.out.println(Database.getTable(name).columns.length);
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
 				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -1080,7 +1071,6 @@ public class DatabaseGUI {
 					
 					if(dataarr == null) {
 						
-						System.out.println("buraya girmen lazım");
 						dataarr = new String[1][Database.getTable(name).columns.length];
 						for(int i =0;i<Database.getTable(name).columns.length;i++) {
 						
@@ -1962,7 +1952,7 @@ public class DatabaseGUI {
 		orderpanel.add(AscendingButton);
 		JPanel addallpanel = new JPanel();
 		addallpanel.setBackground(new Color(230, 230, 250));
-		addallpanel.setBounds(43, 304, 0, 0);
+		addallpanel.setBounds(43, 304, 752, 200);
 		frmDatabase.getContentPane().add(addallpanel);
 		addallpanel.setLayout(null);
 		
@@ -2086,6 +2076,14 @@ public class DatabaseGUI {
 		btnNewButton_4.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/add.png")));
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				if(howmany.getText().toString().equals("")) {
+					System.out.println("bos");
+				}
+				else {
+					
+				
+				btnNewButton_4.setEnabled(false);
 				int number = Integer.parseInt(howmany.getText());
 				btnNewButton_4.setName(howmany.getText().toString());
 				btnNewButton_4.revalidate();
@@ -2093,39 +2091,42 @@ public class DatabaseGUI {
 				progressBar.setVisible(true);
 				Thread addDataThread = new Thread(() -> {
 					
-						 Random rand = new Random();
-						 String ALPHABET = "bcdfghjklmnpqrstvwxyz";
-						 String ALPHABETSESLI = "aeiou";
-						//int columsnumber = 
-						
-						String columarr[][] = new String[Database.getTable(name).columns.length][2];
-						String data[][] = new String[Database.getTable(name).columns.length][2];
+					int colnumber = Database.getTable(name).columns.length;
+						Random rand = new Random();
+						String ALPHABET = "bcdfghjklmnpqrstvwxyz";
+						String ALPHABETSESLI = "aeiou";
+					
+						String columarr[][] = new String[colnumber][2];
+						String data[][] = new String[colnumber][2];
 
-						for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+						for (int i = 0; i <colnumber; i++) {
 
 							columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 							columarr[i][1] = Database.getTable(name).columns[i].type.toString();
 
 						}
-			
-						String[] arr = new String[Database.getTable(name).columns.length];
 						
+						
+			
+						String[] arr = new String[colnumber];
+						
+						 isend = false;
 					for( int i = 0;i<number;i++) {
 						
 					
-						for (int k = 1 ;k<Database.getTable(name).columns.length;k++) {
+						for (int k = 1 ;k<colnumber;k++) {
 					
 						if(columarr[k][1].equals("int")) {
 							
-							 	int min = 10; // 2 basamaklı sayılar için minimum değer
-						        int max = 100; // 6 basamaklı sayılar için maksimum değer
+							 	int min = 10; //
+						        int max = 9999; //
 						        int randomNumber = rand.nextInt((max - min) + 1) + min;
-						        
 						        arr[k] = randomNumber+"";
+						       
 					
 						}
 						else if(columarr[k][1].equals("char")){
-							int length = rand.nextInt(9) + 2; // 2-10 arasında rastgele bir uzunluk seçin
+							int length = rand.nextInt(9) + 2; 
 					        StringBuilder sb = new StringBuilder();
 					        for (int i1 = 0; i1 < length; i1++) {
 					        	int index;
@@ -2142,24 +2143,35 @@ public class DatabaseGUI {
 				
 						}
 					        arr[k] = sb.toString(); 
+					       
 						
 					}
 					
 						
 						}
-						try {
+						
+						 try {
 								Database.newData(arr, name);
-							
+						
 							}
-						 catch (ClassNotFoundException | IOException e2) {
+						 catch (ClassNotFoundException | IOException  | java.lang.ArrayIndexOutOfBoundsException e2 ) {
 								// TODO Auto-generated catch block
 								e2.printStackTrace();
 							}
+			
+						
 						 int progress = (i + 1) * 100 / number;
 					        SwingUtilities.invokeLater(() -> {
 					            progressBar.setValue(progress);
 					        });
 				    }
+					System.out.println("bilmem kac kere girdi");
+					btnViewTable.doClick();
+					progressBar.setValue(0);
+					howmany.setText("");
+					progressBar.setValue(0);
+					btnNewButton_4.setEnabled(true);
+				
 				});
 				Thread updateProgressBarThread = new Thread(() -> {
 				    while (addDataThread.isAlive()) {
@@ -2173,6 +2185,7 @@ public class DatabaseGUI {
 				                
 				            });
 				        }
+				        
 
 				        try {
 				            Thread.sleep(100);
@@ -2182,16 +2195,11 @@ public class DatabaseGUI {
 				    }
 				});
 		
-				howmany.setText("");
+				
 				addDataThread.start();
 				updateProgressBarThread.start();
-				progressBar.setValue(0);
-				btnViewTable.doClick();
 			}
-		
-			
-			
-	
+			}
 		});
 			
 		btnNewButton_4.setBounds(328, 122, 86, 54);

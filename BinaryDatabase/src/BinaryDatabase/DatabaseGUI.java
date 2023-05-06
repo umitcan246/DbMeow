@@ -112,6 +112,7 @@ public class DatabaseGUI {
 	private JTextField update9;
 	private JTextField deleteid;
 	private JTextField howmany;
+	private JTextField searchByColumText;
 
 	/**
 	 * Launch the application.
@@ -711,7 +712,7 @@ public class DatabaseGUI {
 		panel_1.setLayout(null);
 
 		//Search Panel
-		searchpanel.setBounds(43, 321, 0, 0);
+		searchpanel.setBounds(43, 321, 752, 200);
 		frmDatabase.getContentPane().add(searchpanel);
 		searchpanel.setLayout(null);
 
@@ -773,21 +774,27 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByID.setBounds(371, 97, 142, 30);
+		btnSearchByID.setBounds(161, 97, 142, 30);
 		searchpanel.add(btnSearchByID);
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByID.setBackground(new Color(230, 230, 250));
 
 		searchid = new JTextField();
-		searchid.setBounds(289, 51, 158, 20);
+		searchid.setBounds(79, 51, 158, 20);
 		searchpanel.add(searchid);
 		searchid.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("ID : ");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_1.setBounds(182, 54, 97, 20);
+		lblNewLabel_1.setBounds(0, 54, 69, 20);
 		searchpanel.add(lblNewLabel_1);
 		searchpanel.setVisible(false);
+		
+		JComboBox ColNameBox = new JComboBox();
+		
+		ColNameBox.setToolTipText("");
+		ColNameBox.setBounds(444, 50, 97, 22);
+		searchpanel.add(ColNameBox);
 
 		JButton btnTableData = new JButton("");
 		btnTableData.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -796,6 +803,15 @@ public class DatabaseGUI {
 		btnTableData.setVisible(false);
 		btnTableData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				ColNameBox.removeAllItems();
+				String colname[] = new String[Database.getTable(name).columns.length];
+				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
+					
+					colname[i] =Database.getTable(name).columns[i].name.toString();
+					ColNameBox.addItem(colname[i]);
+				}
+				//
+				
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
 				deletepanel.setVisible(false);
@@ -869,10 +885,100 @@ public class DatabaseGUI {
 
 			}
 		});
-		btnSearchByOffset.setBounds(233, 97, 128, 30);
+		btnSearchByOffset.setBounds(23, 97, 128, 30);
 		searchpanel.add(btnSearchByOffset);
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByOffset.setBackground(new Color(230, 230, 250));
+		
+		JLabel lblNewLabel_5 = new JLabel("Search:");
+		lblNewLabel_5.setBounds(551, 11, 87, 30);
+		searchpanel.add(lblNewLabel_5);
+		
+		searchByColumText = new JTextField();
+		searchByColumText.setBounds(551, 51, 128, 20);
+		searchpanel.add(searchByColumText);
+		searchByColumText.setColumns(10);
+		
+		JButton SearchColmBtn = new JButton("Search by colum");
+		SearchColmBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				boolean error =false;
+				
+				if (!searchByColumText.getText().equals("") ) {
+					String selectedValue = ColNameBox.getSelectedItem().toString();
+					String SearchText = searchByColumText.getText().toString();
+					String[] arr = new String[Database.getTable(name).columns.length];
+					
+					try {
+					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
+					String temparr[][] = new String[1][Database.getTable(name).columns.length];
+					String colname[] = new String[Database.getTable(name).columns.length];
+
+					String columarr[][] = new String[Database.getTable(name).columns.length][2];
+
+					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+
+						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
+						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
+
+					}
+
+					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+						temparr[0][i] = arr[i];
+						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
+					}
+
+					panel_1.removeAll();
+					JTable table = new JTable(temparr, colname);
+					Font font = new Font("Arial", Font.PLAIN, 15); 
+					CustomCellRenderer renderer = new CustomCellRenderer(font);
+					for (int c = 0; c < table.getColumnCount(); c++) {
+					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					   
+					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					}
+					    JTableHeader headera = table.getTableHeader();
+				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+
+				        // Başlık kısmının kenarlığını ayarlama
+				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
+
+					JTableHeader header = table.getTableHeader();
+					panel_1.setLayout(new BorderLayout());
+					panel_1.add(header, BorderLayout.NORTH);
+					panel_1.add(table, BorderLayout.CENTER);
+					panel_1.revalidate();
+					panel_1.repaint();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+					
+						
+				
+			}
+				
+				else {
+					
+					System.out.println("Boş olamaz...!");
+				}
+				
+			}});
+		
+		SearchColmBtn.setBounds(517, 100, 121, 23);
+		searchpanel.add(SearchColmBtn);
+		
+		
+	
+		
+		
+		 
+		
+		
+		
+		
+		
 
 		
 		btnViewTable.addActionListener(new ActionListener() {
@@ -887,6 +993,7 @@ public class DatabaseGUI {
 				
 				panel_1.setSize(752, 230);
 				panel_1.setVisible(true);
+				
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
 				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -1157,7 +1264,7 @@ public class DatabaseGUI {
 					columarr[i][1] = Database.getTable(name).columns[i].type.toString();
 
 				}
-
+				
 				String dataarr[][] = null;
 
 				try {
@@ -1170,8 +1277,13 @@ public class DatabaseGUI {
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
+					
+					
 
 				}
+				
+				
+				
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 					if (i == 1) {

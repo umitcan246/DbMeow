@@ -780,7 +780,7 @@ public class DatabaseGUI {
 					panel_1.repaint();
 					long endTime = System.currentTimeMillis();
 					
-					JOptionPane.showMessageDialog(null, "Time consumed : " + (endTime-startTime) + "ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endTime-startTime) + "ms");
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -887,7 +887,7 @@ public class DatabaseGUI {
 					panel_1.repaint();
 					long endtime = System.currentTimeMillis();
 					
-					 JOptionPane.showMessageDialog(null, "Time consumed : " + (endtime-startTime) + "ms");
+					 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endtime-startTime) + "ms");
 					
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1383,7 +1383,7 @@ public class DatabaseGUI {
 					long startTime = System.currentTimeMillis();
 					Database.updateDataByOffset(id, name, arr);
 					long endTime = System.currentTimeMillis();
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1483,7 +1483,7 @@ public class DatabaseGUI {
 					long startTime = System.currentTimeMillis();
 					Database.deleteDataById(id, name);
 					long endTime = System.currentTimeMillis();
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1507,7 +1507,7 @@ public class DatabaseGUI {
 					long startTime = System.currentTimeMillis();
 					Database.deleteDataByOffset(id, name);
 					long endTime = System.currentTimeMillis();
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1590,7 +1590,7 @@ public class DatabaseGUI {
 					btnViewTable.doClick();
 					long endTime = System.currentTimeMillis();
 					lastId = lastId-id;
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 				}
 				
 				else if(secim==1 && id<=lastId) {
@@ -1606,7 +1606,7 @@ public class DatabaseGUI {
 					}
 					long endTime = System.currentTimeMillis();
 					lastId = lastId-id;
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				
 				}
@@ -1812,11 +1812,11 @@ public class DatabaseGUI {
 					}
 				}
 				if (empty) {
-					JOptionPane.showMessageDialog(null, "Table name is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Table name is not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 
 				} else if (type) {
-					JOptionPane.showMessageDialog(null, "Please check type.", "ERROR", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmDatabase, "Please check type.", "ERROR", JOptionPane.ERROR_MESSAGE);
 				} else {
 					String arr[] = new String[colnumber];
 					for (int i = 1; i < colnumber; i++) {
@@ -1898,7 +1898,7 @@ public class DatabaseGUI {
                 panel_1.add(header, BorderLayout.NORTH);
                 panel_1.revalidate();
                 panel_1.repaint();
-                JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+                JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
    
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -2073,7 +2073,7 @@ public class DatabaseGUI {
             }
             @Override
             public void focusLost(FocusEvent e) {
-            	btnNewButton_4.setBorder(new TitledBorder(null, ""+howmany.getText(), TitledBorder.CENTER, TitledBorder.BELOW_BOTTOM, null, new Color(0, 191, 255)));
+            	btnNewButton_4.setBorder(new TitledBorder(frmDatabase, ""+howmany.getText(), TitledBorder.CENTER, TitledBorder.BELOW_BOTTOM, null, new Color(0, 191, 255)));
             }
             });
 		
@@ -2254,12 +2254,12 @@ public class DatabaseGUI {
 
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Column name  or data type is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Column name  or data type is not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				}
 				else {
-					JOptionPane.showMessageDialog(null, "Table name is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Table name is not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				

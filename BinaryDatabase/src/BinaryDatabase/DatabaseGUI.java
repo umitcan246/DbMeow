@@ -76,6 +76,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextArea;
+import java.awt.Toolkit;
 
 
 public class DatabaseGUI {
@@ -199,6 +200,7 @@ public class DatabaseGUI {
 		Database db = new Database();
 
 		frmDatabase = new JFrame("binary file search");
+		frmDatabase.setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseGUI.class.getResource("/icon/cool.png")));
 		frmDatabase.getContentPane().setBackground(new Color(230, 230, 250));
 		frmDatabase.setResizable(false);
 		frmDatabase.setTitle("DBMeow");
@@ -730,7 +732,26 @@ public class DatabaseGUI {
 		btnSearchByID.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By ID", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByID.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				boolean error = false;
+				if(searchid.getText().equals("")) {
+					error = true;
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					try {
+					
+						Integer.parseInt(searchid.getText());
+					}
+					catch (Exception e1) {
+						error = true;
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				
+				
+				if(!error) {
+					
+				
 				int id = Integer.parseInt(searchid.getText());
 
 				String[] arr = new String[Database.getTable(name).columns.length];
@@ -738,6 +759,14 @@ public class DatabaseGUI {
 				try {
 					long startTime = System.currentTimeMillis();
 					arr = Database.seqSearchById(id, name);
+					
+	
+					if(arr[0]==null) {
+						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+						searchid.setText("");
+					}
+					else{
+					
 
 					String temparr[][] = new String[1][Database.getTable(name).columns.length];
 					String colname[] = new String[Database.getTable(name).columns.length];
@@ -765,14 +794,10 @@ public class DatabaseGUI {
 					   
 					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					}
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					    JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					JScrollPane sp = new JScrollPane(table);
-
-					JTableHeader header = table.getTableHeader();
 					panel_1.setLayout(new BorderLayout());
 					panel_1.add(header, BorderLayout.NORTH);
 					panel_1.add(table, BorderLayout.CENTER);
@@ -781,17 +806,17 @@ public class DatabaseGUI {
 					long endTime = System.currentTimeMillis();
 					
 					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endTime-startTime) + "ms");
-				} catch (ClassNotFoundException | IOException e1) {
+				}} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
-
+				}}
+				
 			}
 		});
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByID.setBackground(new Color(230, 230, 250));
 
-		searchid = new JTextField();
+		searchid = new JTextField("");
 		searchid.setColumns(10);
 
 		JLabel lblNewLabel_1 = new JLabel("ID : ");
@@ -809,14 +834,17 @@ public class DatabaseGUI {
 		btnTableData.setVisible(false);
 		btnTableData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				ColNameBox.removeAllItems();
 				String colname[] = new String[Database.getTable(name).columns.length];
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 					
 					colname[i] =Database.getTable(name).columns[i].name.toString();
-					ColNameBox.addItem(colname[i]);
+					
+					ColNameBox.addItem(colname[i]+ "_" + Database.getTable(name).columns[i].type.toString());
 				}
-				//
+				ColNameBox.setSelectedIndex(0);
+			
 				
 				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
@@ -838,13 +866,37 @@ public class DatabaseGUI {
 		btnSearchByOffset.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "By Offset", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		btnSearchByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				boolean error = false;
+				if(searchid.getText().equals("")) {
+					error = true;
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					try {
+					
+						Integer.parseInt(searchid.getText());
+					}
+					catch (Exception e1) {
+						error = true;
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				
+				if(!error) {
+					
+				
 				int id = Integer.parseInt(searchid.getText());
 				String[] arr = new String[Database.getTable(name).columns.length];
 
 				try {
 					long startTime = System.currentTimeMillis();
 					arr = Database.searchData(id, name);
+					
+					if(arr[0]==null) {
+						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+						searchid.setText("");
+					}
+					else{
 
 					String temparr[][] = new String[1][Database.getTable(name).columns.length];
 					String colname[] = new String[Database.getTable(name).columns.length];
@@ -872,14 +924,10 @@ public class DatabaseGUI {
 					   
 					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					}
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					JScrollPane sp = new JScrollPane(table);
-
 					JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));  
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
 					panel_1.setLayout(new BorderLayout());
 					panel_1.add(header, BorderLayout.NORTH);
 					panel_1.add(table, BorderLayout.CENTER);
@@ -889,11 +937,11 @@ public class DatabaseGUI {
 					
 					 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endtime-startTime) + "ms");
 					
-				} catch (ClassNotFoundException | IOException e1) {
+					}} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
+				}
 			}
 		});
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -912,12 +960,47 @@ public class DatabaseGUI {
 				boolean error =false;
 				
 				if (!searchByColumText.getText().equals("") ) {
+					
+					
+					String name1 = ColNameBox.getSelectedItem().toString();
+					 
+				
+				
+					 String temp = name1.split("_")[1];
+					
+					if(temp.equals("int")) {
+						try {
+							
+							Integer.parseInt(searchByColumText.getText());
+							
+						}
+						catch (Exception e1) {
+							error  = true;
+							JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+						}
+						
+					}
+				
+					if(!error) {
 					String selectedValue = ColNameBox.getSelectedItem().toString();
+					
+					selectedValue = selectedValue.split("_")[0];
+					
 					String SearchText = searchByColumText.getText().toString();
 					String[][] arr = null;
 					int colnumber = Database.getTable(name).columns.length;
 					try {
+						
+					
 					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
+					
+				
+					if(arr.length==0) {
+						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+					}
+					else {
+						
+					
 					String colname[] = new String[colnumber];
 
 					String columarr[][] = new String[colnumber][2];
@@ -952,10 +1035,11 @@ public class DatabaseGUI {
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
-				} catch (ClassNotFoundException | IOException e1) {
+				} }catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}	
 			}
+				}
 				else {
 					
 					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1022,17 +1106,10 @@ public class DatabaseGUI {
 		btnViewTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int colnumber = Database.getTable(name).columns.length;
-				//addallpanel.setVisible(false);
-				//orderpanel.setVisible(false);
-				//panel.setVisible(false);
-				//deletepanel.setVisible(false);
-				//newtablepanel.setVisible(false);
-				//newtablepanel.setVisible(false);
-				//searchpanel.setVisible(false);
-				
+		
 				panel_1.setSize(752, 230);
 				panel_1.setVisible(true);
-				System.out.println(Database.getTable(name).columns.length);
+				
 				String columarr[][] = new String[colnumber][2];
 
 				for (int i = 0; i < colnumber; i++) {
@@ -1054,11 +1131,11 @@ public class DatabaseGUI {
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
 
 						columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
-						System.out.println(columsName[i]);
+						
 					}
 					
 					if(dataarr == null) {
-						
+						lastId= 0;
 						dataarr = new String[1][colnumber];
 						for(int i =0;i<Database.getTable(name).columns.length;i++) {
 						
@@ -1105,7 +1182,7 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(btnViewTable);
 
 		//Update Panel
-		updatepanel.setBounds(31, 309, 0, 0);
+		updatepanel.setBounds(31, 309, 752, 200);
 		frmDatabase.getContentPane().add(updatepanel);
 		updatepanel.setLayout(null);
 
@@ -1277,6 +1354,28 @@ public class DatabaseGUI {
 		btnSearch.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update.png")));
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boolean error = false;
+				
+				if(updateid.getText().equals("")) {
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					
+					try {
+						Integer.parseInt(updateid.getText());
+						
+					}
+					catch (Exception e1) {
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+
+						error = true;
+					}
+					
+					
+				}
+				
+				if(!error) {
+					
 				
 				int id = Integer.parseInt(updateid.getText());
 				String columsName[] = new String[Database.getTable(name).columns.length];
@@ -1321,7 +1420,7 @@ public class DatabaseGUI {
 					}
 
 				}
-				
+				}
 			}
 		});
 		btnSearch.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1335,6 +1434,7 @@ public class DatabaseGUI {
 		btnNewButton_3_1.setSelectedIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update_icon.png")));
 		btnNewButton_3_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boolean error = false;
 				if(updateid.getText().equals("")) {
 					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -1344,8 +1444,30 @@ public class DatabaseGUI {
 				String[] arr = new String[colnumber];
 				for (int i = 0; i < colnumber; i++) {
 
+					if(Database.getTable(name).columns[i].type.toString().equals("char")) {
 					arr[i] = updatecolum[i].getText();
+					System.out.println("char" + updatecolum[i].getText());
+					}
+					else {
+
+						try {
+							arr[i] = updatecolum[i].getText();
+							System.out.println("int " + updatecolum[i].getText());
+							Integer.parseInt(updatecolum[i].getText().toString());
+						}
+						catch (Exception e1) {
+							error = true;
+							JOptionPane.showMessageDialog(frmDatabase,"Check type ! Please enter a valid type and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+						
+						}
+					}
 				}
+				
+				
+				if(!error) {
+					
+				
+				
 				try {
 					long startTime = System.currentTimeMillis();
 					Database.updateDataById(id, name, arr);
@@ -1354,6 +1476,7 @@ public class DatabaseGUI {
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
+				}
 				}
 			}}
 		});
@@ -1398,7 +1521,7 @@ public class DatabaseGUI {
 		updatepanel.add(btnNewButton_3_2);
 
 		//DeletePanel
-		deletepanel.setBounds(31, 321, 752, 200);
+		deletepanel.setBounds(31, 321, 0, 0);
 		frmDatabase.getContentPane().add(deletepanel);
 		deletepanel.setLayout(null);
 
@@ -1461,7 +1584,7 @@ public class DatabaseGUI {
 		btnSearch_1.setBounds(224, 36, 58, 40);
 		deletepanel.add(btnSearch_1);
 
-		deleteid = new JTextField();
+		deleteid = new JTextField("");
 		deleteid.setColumns(10);
 		deleteid.setBounds(148, 48, 66, 20);
 		deletepanel.add(deleteid);
@@ -1476,18 +1599,47 @@ public class DatabaseGUI {
 		deleteDataById.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Delete Data", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		deleteDataById.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int id;
+				boolean error = false;
+				if(deleteid.getText().toString().equals("")) {
+					
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);	
+				}
+				
+				else {
+				
+					try {
+						Integer.parseInt(deleteid.getText());
+						
+					}
+					catch (Exception e1) {
+						error = true;
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query.", "Error", JOptionPane.ERROR_MESSAGE); 
+					}
+				
+					if(!error) {
 
-				int id = Integer.parseInt(deleteid.getText());
+				
 
 				try {
+					id = Integer.parseInt(deleteid.getText());
 					long startTime = System.currentTimeMillis();
-					Database.deleteDataById(id, name);
+					boolean found = Database.deleteDataById(id, name);
 					long endTime = System.currentTimeMillis();
-					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
+					
+					if(found) {
+						JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
+					}
+					else {
+						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+					
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				}
+			}
 				}
 			}
 		});
@@ -1500,19 +1652,53 @@ public class DatabaseGUI {
 		deleteDataByOffset.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "Delete Data", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, null));
 		deleteDataByOffset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				int id = Integer.parseInt(deleteid.getText());
-
+				
+				int id;
+				boolean error = false;
+				if(deleteid.getText().toString().equals("")) {
+					
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);	
+				}
+				
+				else {
+					
+				
+					try {
+						 
+						Integer.parseInt(deleteid.getText());
+					}
+					catch (Exception e1) {
+						error = true;
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query.", "Error", JOptionPane.ERROR_MESSAGE); 
+					}
+				
+					if(!error) {
+						
+					
 				try {
+					id = Integer.parseInt(deleteid.getText());
 					long startTime = System.currentTimeMillis();
-					Database.deleteDataByOffset(id, name);
+					 boolean found = Database.deleteDataByOffset(id, name);
 					long endTime = System.currentTimeMillis();
+					
+					if(found) {
+						
+					
 					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
+					}
+					else {
+						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
+					}
+					
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+					}
+			}
+			
+			
 			}
 		});
 		deleteDataByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1540,14 +1726,28 @@ public class DatabaseGUI {
 		JButton btnDeleteData = new JButton("Delete Data");
 		btnDeleteData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				boolean error = false;
+				int id;
+				int secim;
 				if(alldeleteid.getText().equals("") && lastId==0) {
-					JOptionPane.showMessageDialog(frmDatabase, "Pls give some numbers");
+					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);	
 				}
 				else {
 		
-				int id = Integer.parseInt(alldeleteid.getText().toString());
-				int secim = alldeletecombo.getSelectedIndex();
+					
+					try {
+						Integer.parseInt(alldeleteid.getText().toString());
+					}
+					catch (Exception e1) {
+						error=true;
+						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query.", "Error", JOptionPane.ERROR_MESSAGE); 
+					}
+					
+					if(!error) {
+						
+					
+				id = Integer.parseInt(alldeleteid.getText().toString());
+				secim = alldeletecombo.getSelectedIndex();
 				if(id>lastId && lastId>0) {
 					int choice = JOptionPane.showConfirmDialog(frmDatabase, "You entered a high number. We have " + (lastId)  + " data. Do you want to delete all ?", "Soru", JOptionPane.YES_NO_OPTION);
 					 if (choice == JOptionPane.YES_OPTION) {
@@ -1570,9 +1770,8 @@ public class DatabaseGUI {
 				        	alldeleteid.setText("");
 				        }
 				}
-				
-					
-				
+						
+			
 				if(secim==0 && id<=lastId) {
 					long startTime = System.currentTimeMillis();
 					for(int i =1;i<id+1;i++) {
@@ -1614,7 +1813,7 @@ public class DatabaseGUI {
 				}
 				
 						
-				
+				}
 			}
 		});
 		btnDeleteData.setFont(new Font("Dubai", Font.PLAIN, 14));
@@ -1877,7 +2076,7 @@ public class DatabaseGUI {
 				String columsName[] = new String[colnumber];
 				for (int i = 0; i < colnumber; i++) {
 					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
-					System.out.println(columsName[i]);
+					
 				}
 
 				panel_1.removeAll();
@@ -1943,7 +2142,7 @@ public class DatabaseGUI {
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
 
 						columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
-						System.out.println(columsName[i]);
+						
 					}
 
 					panel_1.removeAll();
@@ -2082,11 +2281,26 @@ public class DatabaseGUI {
 		btnNewButton_4.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/add.png")));
 		btnNewButton_4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				boolean error = false;
 				if(howmany.getText().toString().equals("")) {
+					error = true;
 					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
+				
 				else {
+					
+				
+				try {
+					Integer.parseInt(howmany.getText());
+				}
+				catch (Exception e1) {
+					error = true;
+					howmany.setText("");
+					JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				}
+				
+			if(!error) {
 				btnNewButton_4.setEnabled(false);
 				int number = Integer.parseInt(howmany.getText());
 				btnNewButton_4.setName(howmany.getText().toString());
@@ -2155,6 +2369,7 @@ public class DatabaseGUI {
 					howmany.setText("");
 					progressBar.setValue(0);
 					btnNewButton_4.setEnabled(true);
+					
 				});
 				Thread updateProgressBarThread = new Thread(() -> {
 				    while (addDataThread.isAlive()) {
@@ -2198,7 +2413,7 @@ public class DatabaseGUI {
 			public void actionPerformed(ActionEvent e) {
 				boolean error = false;
 				if (!tablename.getText().equals("") ) {
-					System.out.println(counter);
+					
 					if (counter==0) {
 						error=true;
 					}
@@ -2258,12 +2473,13 @@ public class DatabaseGUI {
 							JOptionPane.ERROR_MESSAGE);
 				}
 				}
+				
 				else {
 					JOptionPane.showMessageDialog(frmDatabase, "Table name can not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				
-				newtablepanel.setSize(0,0);
+				
 			}
 		});
 		btnNewButton_1.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));

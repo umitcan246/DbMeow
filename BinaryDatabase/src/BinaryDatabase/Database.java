@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import BinaryDatabase.Database.Table;
 
 import java.io.*;
@@ -128,7 +130,7 @@ public class Database {
     	if(order.equals("descending"))
     	{
     		sortArrayByColumnDescending(data,c);
-    		System.out.println("Offsett");
+   
     	}
     	else if(order.equals("ascending"))
     	{
@@ -494,10 +496,7 @@ public class Database {
                     int x=RECORD_SIZE*currId;
                     recordsFile.seek(x);
                 }
-                
-                if (!found) {
-                    System.out.println("Record not found.");
-                }
+             
             } catch (IOException e) {
                 e.printStackTrace();
             }  	
@@ -529,9 +528,7 @@ public class Database {
                 }
             }
                         
-            if (!found) {
-                System.out.println("Record not found.");
-            }
+           
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -597,8 +594,6 @@ public class Database {
             }
 
             records_file1.close();
-        } else {
-            System.out.println("not found");
         }
     }
     
@@ -642,8 +637,6 @@ public class Database {
                 }
             }
             records_file1.close();
-        } else {
-            System.out.println("not found");
         }
 		return searcharr;
     }
@@ -675,8 +668,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
                  if (currId == search_id) { 
                     
                     found=true;
-                    System.out.println(found);
-                    
+         
                     searcharr2[0] = search_id+""; 
                     for(int i=1;i<numInttype+numChartype;i++) {
                     	
@@ -698,10 +690,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
                 int x=RECORD_SIZE*currId;
                 recordsFile.seek(x);
             }
-            
-            if (!found) {
-                System.out.println("Record not found.");
-            }
+           
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -788,7 +777,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
 		return data;
     }
     
-public static void deleteDataByOffset(int id,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
+public static boolean deleteDataByOffset(int id,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
     	
     	Scanner scanner = new Scanner(System.in);
 
@@ -802,7 +791,7 @@ public static void deleteDataByOffset(int id,String tablename) throws FileNotFou
         int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype; 
         
         SearchResult result = searchID(fileName,id);
-        
+        boolean found = false;
         if(result.found){
         	
         	try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "rw")) {
@@ -827,11 +816,11 @@ public static void deleteDataByOffset(int id,String tablename) throws FileNotFou
                    }
                    recordsFile.setLength(recordsFile.length() - RECORD_SIZE);
             	}
-               
+             
                 try (RandomAccessFile indexFile = new RandomAccessFile(fileName + "Index.bin", "rw")) {
                    
                     indexFile.setLength(indexFile.length() - 16);
-                    System.out.println("Record has been deleted.");
+                    found = true;
                 }
             	catch (IOException e) {
             		e.printStackTrace();
@@ -840,10 +829,11 @@ public static void deleteDataByOffset(int id,String tablename) throws FileNotFou
             catch (IOException e) {
         		e.printStackTrace();
         	}	        	
-        }        
+        }
+		return found;        
     }
 
-public static void deleteDataById(int id , String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
+public static boolean deleteDataById(int id , String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
 	
 	Scanner scanner = new Scanner(System.in);
    
@@ -855,12 +845,12 @@ public static void deleteDataById(int id , String tablename) throws FileNotFound
     
     int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype; 
     long startOffset=-1;
-
+    boolean found=false;
     try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {
        
         int search_id = id; 
         recordsFile.seek(0);
-        boolean found=false;
+      
         
         while (recordsFile.getFilePointer() < recordsFile.length()) {
              currId = recordsFile.readInt(); 
@@ -874,11 +864,7 @@ public static void deleteDataById(int id , String tablename) throws FileNotFound
             recordsFile.seek(x);
         }
         
-        if (!found) {
-            System.out.println("Record not found.");
-        }
-        
-        else {
+       if(found) {
         	try (RandomAccessFile recordsFileforDelete = new RandomAccessFile(fileName + "Records.bin", "rw")) {
         		recordsFileforDelete.seek(startOffset - RECORD_SIZE);
             	long nextRecordOffset = startOffset + RECORD_SIZE;
@@ -918,7 +904,8 @@ public static void deleteDataById(int id , String tablename) throws FileNotFound
         }
     } catch (IOException e) {
         e.printStackTrace();
-    }	
+    }
+	return found;	
 }
 public static String [][] searchWordOrNuM(String colsName,String SearchText ,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
 {
@@ -1054,20 +1041,11 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
         	x+=RECORD_SIZE;
         	
         }
-        if (!found) {
-            System.out.println("Record not found.");
-        }
-        else
-        {	
-        	System.out.println("Bulundu.");
-        }
-        
-        
+    
         
     } catch (IOException e) {
         e.printStackTrace();
-        
-        System.out.println("Hata Bulundu.");
+       
     }
     String [][]returnDup=new String[duplicates.size()][xTable.columns.length];
     int i=0;
@@ -1090,58 +1068,5 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
     
 }
 
-
-
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("DATABASE");
-        System.out.println("1.NEW TABLE");
-        System.out.println("2.ADD RECORD");
-        System.out.println("3.SEARCH A RECORD by offset");
-        System.out.println("4.list  RECORDs");
-        System.out.println("5.SEARCH A RECORD by id");
-        System.out.println("6.UPDATE A RECORD by offset");
-        System.out.println("7.UPDATE A RECORD by id");
-        System.out.println("7.DELETE A RECORD by offset");
-        System.out.println("7.DELETE A RECORD by id");
-        String input = "";
-        while(!input.equals("q")) 
-        {
-        	input = scanner.nextLine();
-        	if(input.equals("1")) {
-        		//newTable();
-        	}
-        	if(input.equals("2")) {
-        		//newData();
-        	}
-        	if(input.equals("3")) {
-        		//searchData();
-        	}
-        	if(input.equals("4")) {
-        		//readAll();
-        	}      	
-        	if(input.equals("5")) {
-        		//seqSearchById();
-            }
-        	if(input.equals("6")) {
-        		//updateDataByOffset(1);
-            }
-        	if(input.equals("7")) {
-        		//updateDataById();
-        	}
-        	if(input.equals("8")) {
-        		//deleteDataByOffset();
-        	}
-        	if(input.equals("9")) {
-        		//deleteDataById();
-        	}
-        	if(input.equals("10")) {
-        		//ascendingOrderListByIndex();
-        	}
-        	if(input.equals("11")) {
-        		//ascendingOrderListById();
-        	}
-        }
-    }
+   
 }

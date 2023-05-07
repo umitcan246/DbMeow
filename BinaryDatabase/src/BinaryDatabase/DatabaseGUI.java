@@ -1182,7 +1182,7 @@ public class DatabaseGUI {
 		frmDatabase.getContentPane().add(btnViewTable);
 
 		//Update Panel
-		updatepanel.setBounds(31, 309, 752, 200);
+		updatepanel.setBounds(31, 309, 0, 0);
 		frmDatabase.getContentPane().add(updatepanel);
 		updatepanel.setLayout(null);
 
@@ -1355,9 +1355,13 @@ public class DatabaseGUI {
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean error = false;
-				
-				if(updateid.getText().equals("")) {
+				if(updateid.getText().equals("") ) {
+					error = true;
 					JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else if ( Integer.parseInt(updateid.getText()) > lastId ){
+					error = true;
+					JOptionPane.showMessageDialog(frmDatabase,"Record is not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 					
@@ -1446,19 +1450,19 @@ public class DatabaseGUI {
 
 					if(Database.getTable(name).columns[i].type.toString().equals("char")) {
 					arr[i] = updatecolum[i].getText();
-					System.out.println("char" + updatecolum[i].getText());
 					}
 					else {
-
 						try {
 							arr[i] = updatecolum[i].getText();
-							System.out.println("int " + updatecolum[i].getText());
-							Integer.parseInt(updatecolum[i].getText().toString());
+							if(i != 0) {
+								Integer.parseInt(updatecolum[i].getText());
+							}
+						 
 						}
 						catch (Exception e1) {
 							error = true;
 							JOptionPane.showMessageDialog(frmDatabase,"Check type ! Please enter a valid type and try again.", "Error", JOptionPane.ERROR_MESSAGE);
-						
+							
 						}
 					}
 				}
@@ -1472,7 +1476,7 @@ public class DatabaseGUI {
 					long startTime = System.currentTimeMillis();
 					Database.updateDataById(id, name, arr);
 					long endTime = System.currentTimeMillis();
-					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
@@ -1490,6 +1494,7 @@ public class DatabaseGUI {
 		btnNewButton_3_2.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update_icon.png")));
 		btnNewButton_3_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boolean error = false;
 				if(updateid.getText().equals("")) {
 					System.out.println("bos olamass");
 				}
@@ -1499,9 +1504,29 @@ public class DatabaseGUI {
 				String[] arr = new String[Database.getTable(name).columns.length];
 				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
 
-					arr[i] = updatecolum[i].getText();
-
-				}
+					
+					if(Database.getTable(name).columns[i].type.toString().equals("char")) {
+						arr[i] = updatecolum[i].getText();
+						}
+						else {
+							try {
+								arr[i] = updatecolum[i].getText();
+								if(i != 0) {
+									Integer.parseInt(updatecolum[i].getText());
+								}
+							 
+							}
+							catch (Exception e1) {
+								error = true;
+								JOptionPane.showMessageDialog(frmDatabase,"Check type ! Please enter a valid type and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+								
+							}
+						}
+					}
+					
+					
+					if(!error) {
+				
 				try {
 					long startTime = System.currentTimeMillis();
 					Database.updateDataByOffset(id, name, arr);
@@ -1512,7 +1537,7 @@ public class DatabaseGUI {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			}
+			}	}
 			}
 		});
 		btnNewButton_3_2.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1530,6 +1555,37 @@ public class DatabaseGUI {
 		btnSearch_1.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update.png")));
 		btnSearch_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				boolean error = false;
+				
+				if(deleteid.getText().equals("")) {
+				error = true;
+				JOptionPane.showMessageDialog(frmDatabase,"Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else if (Integer.parseInt(deleteid.getText()) > lastId){
+					error = true;
+					JOptionPane.showMessageDialog(frmDatabase,"Record Data is not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+
+				}
+				else {
+					
+					try {
+						
+						Integer.parseInt(deleteid.getText());
+						
+						
+					}
+					catch (Exception e1) {
+						JOptionPane.showMessageDialog(frmDatabase,"Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
+
+						error = true;
+					}
+					
+				}
+				
+				if(!error) {
+					
+				
+				
 				int colnumber = Database.getTable(name).columns.length;
 
 				int id = Integer.parseInt(deleteid.getText());
@@ -1576,7 +1632,7 @@ public class DatabaseGUI {
 				catch (ClassNotFoundException | IOException e1) {
 				
 					e1.printStackTrace();
-				}
+				}}
 			}
 		});
 		btnSearch_1.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -2122,11 +2178,17 @@ public class DatabaseGUI {
 				try {
 					if(combo.getSelectedIndex()== 0)
 					{
+						 long startTime = System.currentTimeMillis();
 						data = Database.OrderListById(name, secim, order);
+						 long endTime = System.currentTimeMillis();
+						 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					}
 					else
 					{
+						long startTime = System.currentTimeMillis();
 						data = Database.OrderListByIndex(name, secim, order);
+						 long endTime = System.currentTimeMillis();
+						 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					}
 					String columarr[][] = new String[Database.getTable(name).columns.length][2];
 

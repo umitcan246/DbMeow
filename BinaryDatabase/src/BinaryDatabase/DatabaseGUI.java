@@ -2073,7 +2073,7 @@ public class DatabaseGUI {
             }
             @Override
             public void focusLost(FocusEvent e) {
-            	btnNewButton_4.setBorder(new TitledBorder(frmDatabase, ""+howmany.getText(), TitledBorder.CENTER, TitledBorder.BELOW_BOTTOM, null, new Color(0, 191, 255)));
+            	btnNewButton_4.setBorder(new TitledBorder(null, ""+howmany.getText(), TitledBorder.CENTER, TitledBorder.BELOW_BOTTOM, null, new Color(0, 191, 255)));
             }
             });
 		

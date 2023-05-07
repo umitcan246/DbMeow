@@ -96,8 +96,7 @@ public class DatabaseGUI {
 	private JTextField columnname9;
 	public int counter = 0;
 	public String name;
-	private JTable table_1;
-	public boolean isend;
+	public int lastId = 0;
 	public int progrescount;
 	public String[] SearchArrayTemp = null;
 	private JTextField textField;
@@ -125,6 +124,7 @@ public class DatabaseGUI {
 	private JTextField deleteid;
 	private JTextField howmany;
 	private JTextField searchByColumText;
+	private JTextField alldeleteid;
 
 	/**
 	 * Launch the application.
@@ -422,10 +422,6 @@ public class DatabaseGUI {
 			columnname[i].setVisible(false);
 
 		}
-		JLabel primary_label = new JLabel("New label");
-		primary_label.setBounds(56, 127, 46, 14);
-		newtablepanel.add(primary_label);
-		primary_label.setVisible(false);
 
 		JButton btnAddRow = new JButton("Add Col");
 		btnAddRow.setForeground(new Color(238, 238, 238));
@@ -435,10 +431,7 @@ public class DatabaseGUI {
 				if (counter < 9) {
 					counter++;
 				}
-				if (counter==1) {
-					
-					primary_label.setVisible(true);
-				}
+				
 
 				columnname[counter].setVisible(true);
 				datatype[counter].setVisible(true);
@@ -461,14 +454,7 @@ public class DatabaseGUI {
 					columnname[counter].setVisible(false);
 					datatype[counter].setVisible(false);
 					counter--;
-				}
-				if (counter==0) {
-					
-					primary_label.setVisible(false);
-				}
-
-				
-				
+				}		
 			}
 		});
 		btnDelCol.setForeground(new Color(238, 238, 238));
@@ -707,7 +693,7 @@ public class DatabaseGUI {
 					if (i == 1) {
 						labelname[i].setVisible(true);
 						addcolumnname[i].setVisible(true);
-						labelname[i].setText("(PK) " + Database.getTable(name).columns[i].name + " ( "
+						labelname[i].setText(Database.getTable(name).columns[i].name + " ( "
 								+ Database.getTable(name).columns[i].type + " )");
 
 					} else {
@@ -929,22 +915,21 @@ public class DatabaseGUI {
 					String selectedValue = ColNameBox.getSelectedItem().toString();
 					String SearchText = searchByColumText.getText().toString();
 					String[][] arr = null;
-					
+					int colnumber = Database.getTable(name).columns.length;
 					try {
 					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
-					String temparr[][] = new String[1][Database.getTable(name).columns.length];
-					String colname[] = new String[Database.getTable(name).columns.length];
+					String colname[] = new String[colnumber];
 
-					String columarr[][] = new String[Database.getTable(name).columns.length][2];
+					String columarr[][] = new String[colnumber][2];
 
-					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+					for (int i = 0; i < colnumber; i++) {
 
 						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
 
 					}
 
-					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+					for (int i = 0; i < colnumber; i++) {
 						
 						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 					}
@@ -954,37 +939,27 @@ public class DatabaseGUI {
 					Font font = new Font("Arial", Font.PLAIN, 15); 
 					CustomCellRenderer renderer = new CustomCellRenderer(font);
 					for (int c = 0; c < table.getColumnCount(); c++) {
-					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					table.getColumnModel().getColumn(c).setCellRenderer(renderer);
 					   
-					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					}
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					JScrollPane sp = new JScrollPane(table);
-
 					JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
 					panel_1.setLayout(new BorderLayout());
 					panel_1.add(header, BorderLayout.NORTH);
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
-					
-						
-				
+				}	
 			}
-				
 				else {
 					
 					System.out.println("Boş olamaz...!");
 				}
-				
 			}});
 		GroupLayout gl_searchpanel = new GroupLayout(searchpanel);
 		gl_searchpanel.setHorizontalGroup(
@@ -1044,26 +1019,23 @@ public class DatabaseGUI {
 		);
 		searchpanel.setLayout(gl_searchpanel);
 		
-		
-
-		
 		btnViewTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				addallpanel.setVisible(false);
-				orderpanel.setVisible(false);
-				panel.setVisible(false);
-				deletepanel.setVisible(false);
-				newtablepanel.setVisible(false);
-				newtablepanel.setVisible(false);
-				searchpanel.setVisible(false);
+				int colnumber = Database.getTable(name).columns.length;
+				//addallpanel.setVisible(false);
+				//orderpanel.setVisible(false);
+				//panel.setVisible(false);
+				//deletepanel.setVisible(false);
+				//newtablepanel.setVisible(false);
+				//newtablepanel.setVisible(false);
+				//searchpanel.setVisible(false);
 				
 				panel_1.setSize(752, 230);
 				panel_1.setVisible(true);
 				System.out.println(Database.getTable(name).columns.length);
-				String columarr[][] = new String[Database.getTable(name).columns.length][2];
+				String columarr[][] = new String[colnumber][2];
 
-				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+				for (int i = 0; i < colnumber; i++) {
 
 					columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 					columarr[i][1] = Database.getTable(name).columns[i].type.toString();
@@ -1075,7 +1047,9 @@ public class DatabaseGUI {
 				try {
 					dataarr = Database.readAll(name);
 					
-					String columsName[] = new String[Database.getTable(name).columns.length];
+					panel_1.removeAll();
+					
+					String columsName[] = new String[colnumber];
 
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
 
@@ -1085,50 +1059,42 @@ public class DatabaseGUI {
 					
 					if(dataarr == null) {
 						
-						dataarr = new String[1][Database.getTable(name).columns.length];
+						dataarr = new String[1][colnumber];
 						for(int i =0;i<Database.getTable(name).columns.length;i++) {
 						
 							dataarr[0][i] = "";
+							
 						}
 					}
-			
-					panel_1.removeAll();
 					
+					else {
+						lastId =Integer.parseInt(dataarr[dataarr.length-1][0]);
+					}
+					
+				
 					JTable table = new JTable(dataarr, columsName);
 					Font font = new Font("Arial", Font.PLAIN, 15); 
 					CustomCellRenderer renderer = new CustomCellRenderer(font);
 					for (int c = 0; c < table.getColumnCount(); c++) {
-					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					table.getColumnModel().getColumn(c).setCellRenderer(renderer);
 					   
-					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					    
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+					table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-				       
-					
 	                JScrollPane scrollPane = new JScrollPane(table);
 	                panel_1.setLayout(new BorderLayout());
 	                panel_1.add(scrollPane, BorderLayout.CENTER);
-
-	                JTableHeader header = table.getTableHeader();
-	                panel_1.add(header, BorderLayout.NORTH);
-	               
+	                panel_1.add(header, BorderLayout.NORTH);    
 	                panel_1.revalidate();
 	                panel_1.repaint();
 					}
 					}
 					
 				 catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
-
-
 					e1.printStackTrace();
 				}
-
 			}
 
 		});
@@ -1290,7 +1256,6 @@ public class DatabaseGUI {
 		btnNewButton_3.setVisible(false);
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
@@ -1307,22 +1272,13 @@ public class DatabaseGUI {
 		btnNewButton_3.setBackground(new Color(230, 230, 250));
 		btnNewButton_3.setBounds(482, 528, 100, 48);
 		frmDatabase.getContentPane().add(btnNewButton_3);
-
 		JButton btnSearch = new JButton("");
 		btnSearch.setToolTipText("Search");
 		btnSearch.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update.png")));
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String[] arr = new String[Database.getTable(name).columns.length];
+				
 				int id = Integer.parseInt(updateid.getText());
-
-				try {
-					arr = Database.seqSearchById(id, name);
-				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
 				String columsName[] = new String[Database.getTable(name).columns.length];
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
@@ -1336,6 +1292,7 @@ public class DatabaseGUI {
 				String dataarr[][] = null;
 
 				try {
+					
 					dataarr = Database.readAll(name);
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
@@ -1344,20 +1301,14 @@ public class DatabaseGUI {
 
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
-					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
-					
-					
-
-				}
-				
-				
-				
+					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";	
+				}		
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 					if (i == 1) {
 						updatecolum[i].setVisible(true);
 						updatelabel[i].setVisible(true);
-						updatelabel[i].setText("(PK) " + Database.getTable(name).columns[i].name + " ( "
+						updatelabel[i].setText(Database.getTable(name).columns[i].name + " ( "
 								+ Database.getTable(name).columns[i].type + " )");
 						updatecolum[i].setText(dataarr[id - 1][i].replaceAll("\\p{C}", ""));
 					} else {
@@ -1384,22 +1335,27 @@ public class DatabaseGUI {
 		btnNewButton_3_1.setSelectedIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update_icon.png")));
 		btnNewButton_3_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(updateid.getText().equals("")) {
+					System.out.println("bos olamass");
+				}
+				else {
+				int colnumber = Database.getTable(name).columns.length;
 				int id = Integer.parseInt(updateid.getText());
-				String[] arr = new String[Database.getTable(name).columns.length];
-				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+				String[] arr = new String[colnumber];
+				for (int i = 0; i < colnumber; i++) {
 
 					arr[i] = updatecolum[i].getText();
-
 				}
 				try {
+					long startTime = System.currentTimeMillis();
 					Database.updateDataById(id, name, arr);
+					long endTime = System.currentTimeMillis();
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-
-			}
+			}}
 		});
 		btnNewButton_3_1.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnNewButton_3_1.setBackground(new Color(230, 230, 250));
@@ -1411,6 +1367,11 @@ public class DatabaseGUI {
 		btnNewButton_3_2.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update_icon.png")));
 		btnNewButton_3_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(updateid.getText().equals("")) {
+					System.out.println("bos olamass");
+				}
+				else {
+
 				int id = Integer.parseInt(updateid.getText());
 				String[] arr = new String[Database.getTable(name).columns.length];
 				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -1419,12 +1380,16 @@ public class DatabaseGUI {
 
 				}
 				try {
+					long startTime = System.currentTimeMillis();
 					Database.updateDataByOffset(id, name, arr);
+					long endTime = System.currentTimeMillis();
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+			}
 			}
 		});
 		btnNewButton_3_2.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1433,7 +1398,7 @@ public class DatabaseGUI {
 		updatepanel.add(btnNewButton_3_2);
 
 		//DeletePanel
-		deletepanel.setBounds(31, 321, 0, 0);
+		deletepanel.setBounds(31, 321, 752, 200);
 		frmDatabase.getContentPane().add(deletepanel);
 		deletepanel.setLayout(null);
 
@@ -1442,27 +1407,28 @@ public class DatabaseGUI {
 		btnSearch_1.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/update.png")));
 		btnSearch_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int colnumber = Database.getTable(name).columns.length;
 
 				int id = Integer.parseInt(deleteid.getText());
 
-				String[] arr = new String[Database.getTable(name).columns.length];
+				String[] arr = new String[colnumber];
 
 				try {
 					arr = Database.seqSearchById(id, name);
 
-					String temparr[][] = new String[1][Database.getTable(name).columns.length];
-					String colname[] = new String[Database.getTable(name).columns.length];
+					String temparr[][] = new String[1][colnumber];
+					String colname[] = new String[colnumber];
 
-					String columarr[][] = new String[Database.getTable(name).columns.length][2];
+					String columarr[][] = new String[colnumber][2];
 
-					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+					for (int i = 0; i < colnumber; i++) {
 
 						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
 
 					}
 
-					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+					for (int i = 0; i < colnumber; i++) {
 						temparr[0][i] = arr[i];
 						colname[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 					}
@@ -1471,49 +1437,39 @@ public class DatabaseGUI {
 					Font font = new Font("Arial", Font.PLAIN, 15); 
 					CustomCellRenderer renderer = new CustomCellRenderer(font);
 					for (int c = 0; c < table.getColumnCount(); c++) {
-					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
-					   
-					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					 table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					 table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					}
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-					JScrollPane sp = new JScrollPane(table);
-
 					JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JScrollPane sp = new JScrollPane(table);
 					panel_1.setLayout(new BorderLayout());
 					panel_1.add(header, BorderLayout.NORTH);
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
-					
-
 				}
+				catch (ClassNotFoundException | IOException e1) {
 				
-					
-				 catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
-
 			}
 		});
 		btnSearch_1.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearch_1.setBackground(new Color(230, 230, 250));
-		btnSearch_1.setBounds(410, 48, 58, 40);
+		btnSearch_1.setBounds(224, 36, 58, 40);
 		deletepanel.add(btnSearch_1);
 
 		deleteid = new JTextField();
 		deleteid.setColumns(10);
-		deleteid.setBounds(340, 59, 66, 20);
+		deleteid.setBounds(148, 48, 66, 20);
 		deletepanel.add(deleteid);
 
 		JLabel lblNewLabel_2_10_1 = new JLabel("ID : ");
+		lblNewLabel_2_10_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel_2_10_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel_2_10_1.setBounds(291, 59, 46, 20);
+		lblNewLabel_2_10_1.setBounds(92, 48, 46, 20);
 		deletepanel.add(lblNewLabel_2_10_1);
 
 		JButton deleteDataById = new JButton("By Id");
@@ -1524,7 +1480,11 @@ public class DatabaseGUI {
 				int id = Integer.parseInt(deleteid.getText());
 
 				try {
+					long startTime = System.currentTimeMillis();
 					Database.deleteDataById(id, name);
+					long endTime = System.currentTimeMillis();
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1533,7 +1493,7 @@ public class DatabaseGUI {
 		});
 		deleteDataById.setFont(new Font("Dubai", Font.BOLD, 10));
 		deleteDataById.setBackground(new Color(230, 230, 250));
-		deleteDataById.setBounds(267, 104, 100, 40);
+		deleteDataById.setBounds(62, 104, 100, 40);
 		deletepanel.add(deleteDataById);
 
 		JButton deleteDataByOffset = new JButton("ByOffset");
@@ -1544,7 +1504,11 @@ public class DatabaseGUI {
 				int id = Integer.parseInt(deleteid.getText());
 
 				try {
+					long startTime = System.currentTimeMillis();
 					Database.deleteDataByOffset(id, name);
+					long endTime = System.currentTimeMillis();
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1553,8 +1517,111 @@ public class DatabaseGUI {
 		});
 		deleteDataByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		deleteDataByOffset.setBackground(new Color(230, 230, 250));
-		deleteDataByOffset.setBounds(390, 104, 100, 40);
+		deleteDataByOffset.setBounds(182, 104, 100, 40);
 		deletepanel.add(deleteDataByOffset);
+		
+		alldeleteid = new JTextField("");
+		alldeleteid.setColumns(10);
+		alldeleteid.setBounds(457, 68, 91, 20);
+		deletepanel.add(alldeleteid);
+		
+		JLabel lblNewLabel_2_10_1_1 = new JLabel("How many data do you want to delete?");
+		lblNewLabel_2_10_1_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_2_10_1_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2_10_1_1.setBounds(465, 36, 252, 20);
+		deletepanel.add(lblNewLabel_2_10_1_1);
+		
+		JComboBox alldeletecombo = new JComboBox();
+		alldeletecombo.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		alldeletecombo.setModel(new DefaultComboBoxModel(new String[] {"From the beginning", "From the end"}));
+		alldeletecombo.setBounds(567, 67, 161, 20);
+		deletepanel.add(alldeletecombo);
+		
+		JButton btnDeleteData = new JButton("Delete Data");
+		btnDeleteData.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				if(alldeleteid.getText().equals("") && lastId==0) {
+					JOptionPane.showMessageDialog(frmDatabase, "Pls give some numbers");
+				}
+				else {
+		
+				int id = Integer.parseInt(alldeleteid.getText().toString());
+				int secim = alldeletecombo.getSelectedIndex();
+				if(id>lastId && lastId>0) {
+					int choice = JOptionPane.showConfirmDialog(frmDatabase, "You entered a high number. We have " + (lastId)  + " data. Do you want to delete all ?", "Soru", JOptionPane.YES_NO_OPTION);
+					 if (choice == JOptionPane.YES_OPTION) {
+						 long startTime = System.currentTimeMillis();
+							for(int i =0;i<lastId;i++) {
+								try {
+									Database.deleteDataByOffset(lastId-i, name);
+									
+								} catch (ClassNotFoundException | IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+							long endTime = System.currentTimeMillis();
+							JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
+							lastId=0;
+							btnViewTable.doClick();
+				            
+				        } else {
+				        	alldeleteid.setText("");
+				        }
+				}
+				
+					
+				
+				if(secim==0 && id<=lastId) {
+					long startTime = System.currentTimeMillis();
+					for(int i =1;i<id+1;i++) {
+
+					try {
+						
+						Database.deleteDataByOffset(1, name);
+						
+						
+					} catch (ClassNotFoundException | IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					}
+					btnViewTable.doClick();
+					long endTime = System.currentTimeMillis();
+					lastId = lastId-id;
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+				}
+				
+				else if(secim==1 && id<=lastId) {
+					long startTime = System.currentTimeMillis();
+					for(int i =0;i<id;i++) {
+						try {
+							Database.deleteDataByOffset(lastId-i, name);
+							
+						} catch (ClassNotFoundException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					long endTime = System.currentTimeMillis();
+					lastId = lastId-id;
+					JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
+					btnViewTable.doClick();
+				
+				}
+				
+				}
+				
+						
+				
+			}
+		});
+		btnDeleteData.setFont(new Font("Dubai", Font.PLAIN, 14));
+		btnDeleteData.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, new Color(0, 0, 0)));
+		btnDeleteData.setBackground(new Color(230, 230, 250));
+		btnDeleteData.setBounds(517, 104, 100, 40);
+		deletepanel.add(btnDeleteData);
 
 		JButton btnNewButton_3_3 = new JButton("");
 		btnNewButton_3_3.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -1571,7 +1638,6 @@ public class DatabaseGUI {
 				newtablepanel.setVisible(false);
 				newtablepanel.setVisible(false);
 				searchpanel.setVisible(false);
-				
 				deletepanel.setSize(752, 200);
 				deletepanel.setVisible(true);
 			}
@@ -1585,9 +1651,6 @@ public class DatabaseGUI {
 		orderpanel.setBounds(31, 321, 0, 0);
 		frmDatabase.getContentPane().add(orderpanel);
 		orderpanel.setLayout(null);
-		
-		
-		
 		
 		JComboBox OrderComboBox = new JComboBox();
 		OrderComboBox.setBounds(123, 48, 182, 21);
@@ -1613,7 +1676,6 @@ public class DatabaseGUI {
 				updatepanel.setVisible(false);
 				orderpanel.setSize(752,200);
 				orderpanel.setVisible(true);
-				
 				
 				OrderComboBox.removeAllItems();
 				OrderComboBox.addItem(Database.getTable(name).columns[0].name.toString());
@@ -1649,8 +1711,7 @@ public class DatabaseGUI {
 		btnInsertTable.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/upload.png")));
 		btnInsertTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				
+			
 				JFileChooser j = new JFileChooser("..\\DbMeow");
 				j.setAcceptAllFileFilterUsed(false); // Disable "All files" filter
 				// only show bin files
@@ -1675,32 +1736,27 @@ public class DatabaseGUI {
 							btnNewButton_3_3.setVisible(true);
 							OrderBtn.setVisible(true);
 							btnViewTable.doClick();
-							
-						
-					
 					}
-							
-					
+
 					catch (Exception e1) {
 						JOptionPane.showMessageDialog(panel, "Could not open file", "Error", JOptionPane.ERROR_MESSAGE);
 					}
-					
-					
-					
 
 				}
 				
 			}
 			
 		});
-		
-		
+	
 		btnInsertTable.setFont(new Font("Georgia", Font.BOLD, 14));
 		btnInsertTable.setBackground(new Color(230, 230, 250));
 		btnInsertTable.setBounds(320, 11, 173, 40);
 		frmDatabase.getContentPane().add(btnInsertTable);
 
 		JButton btnInsertTable_1 = new JButton("");
+		btnInsertTable_1.setContentAreaFilled(false);
+		btnInsertTable_1.setBorderPainted(false);
+		btnInsertTable_1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnInsertTable_1.setBorder(new EmptyBorder(0, 0, 0, 0));
 		btnInsertTable_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -1739,33 +1795,22 @@ public class DatabaseGUI {
 		btnNewButton_2.setBounds(new Rectangle(5, 10, 0, 0));
 		btnNewButton_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				int colnumber = Database.getTable(name).columns.length;
 				boolean empty = false;
 				boolean type = false;
 
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
-
 					if (addcolumnname[i].getText().equals("")) {
-
 						empty = true;
-
 					}
-
 					try {
-
 						if (Database.getTable(name).columns[i].type.equals("int")) {
 							int value = Integer.parseInt(addcolumnname[i].getText());
-
 						}
-
 					} catch (Exception e1) {
-
 						type = true;
-
 					}
-
 				}
-
 				if (empty) {
 					JOptionPane.showMessageDialog(null, "Table name is not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
@@ -1773,46 +1818,34 @@ public class DatabaseGUI {
 				} else if (type) {
 					JOptionPane.showMessageDialog(null, "Please check type.", "ERROR", JOptionPane.ERROR_MESSAGE);
 				} else {
-
-					String arr[] = new String[Database.getTable(name).columns.length];
-					for (int i = 1; i < Database.getTable(name).columns.length; i++) {
+					String arr[] = new String[colnumber];
+					for (int i = 1; i < colnumber; i++) {
 						arr[0] = -1 + "";
 						arr[i] = addcolumnname[i].getText();
-
 					}
-
 					try {
 						Database.newData(arr, name);
 					} catch (ClassNotFoundException | IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-
 					for (int i = 1; i < Database.getTable(name).columns.length; i++) {
 
 						addcolumnname[i].setText("");
-
 					}
-					
-					
 					btnViewTable.doClick();
-					
-
 				}
-
 			}
 		});
 		btnNewButton_2.setBounds(372, 163, 89, 36);
 		panel.add(btnNewButton_2);
-		
-		
-		
+	
 		JButton DescendingButton = new JButton("Descending Order");
 		DescendingButton.setBorder(new LineBorder(new Color(0, 191, 255), 3, true));
 		DescendingButton.setBackground(new Color(230, 230, 250));
 		DescendingButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {	
+			int colnumber = Database.getTable(name).columns.length;
 			String column = OrderComboBox.getSelectedItem().toString();
 			int secim = OrderComboBox.getSelectedIndex();
 			String order = "descending";
@@ -1834,59 +1867,44 @@ public class DatabaseGUI {
 					 endTime = System.currentTimeMillis();
 				}
 				
-				String columarr[][] = new String[Database.getTable(name).columns.length][2];
+				String columarr[][] = new String[colnumber][2];
 
-				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
+				for (int i = 0; i < colnumber; i++) {
 
 					columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 					columarr[i][1] = Database.getTable(name).columns[i].type.toString();
-
 				}
-				
-				String columsName[] = new String[Database.getTable(name).columns.length];
-
-				for (int i = 0; i < Database.getTable(name).columns.length; i++) {
-
+				String columsName[] = new String[colnumber];
+				for (int i = 0; i < colnumber; i++) {
 					columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 					System.out.println(columsName[i]);
 				}
-				
-				
+
 				panel_1.removeAll();
 				
 				JTable table = new JTable(data, columsName);
 				Font font = new Font("Arial", Font.PLAIN, 15); 
 				CustomCellRenderer renderer = new CustomCellRenderer(font);
 				for (int c = 0; c < table.getColumnCount(); c++) {
-				    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
-				   
-				    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+				table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 				}
-				    JTableHeader headera = table.getTableHeader();
-			        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-			        // Başlık kısmının kenarlığını ayarlama
-			        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+				JTableHeader header = table.getTableHeader();
+			    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+			    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 JScrollPane scrollPane = new JScrollPane(table);
                 panel_1.setLayout(new BorderLayout());
                 panel_1.add(scrollPane, BorderLayout.CENTER);
-
-                JTableHeader header = table.getTableHeader();
                 panel_1.add(header, BorderLayout.NORTH);
-                
                 panel_1.revalidate();
                 panel_1.repaint();
-			
                 JOptionPane.showMessageDialog(null, "Time consumed : "+ (endTime-startTime) + " ms");
-                
-                
+   
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
-			
-			
-			
+
 			}
 		});
 		DescendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
@@ -1898,28 +1916,19 @@ public class DatabaseGUI {
 		AscendingButton.setBorder(new LineBorder(new Color(0, 191, 255), 3, true));
 		AscendingButton.setBackground(new Color(230, 230, 250));
 		AscendingButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-				
-				String column = OrderComboBox.getSelectedItem().toString();
+			public void actionPerformed(ActionEvent e) {	
 				int secim = OrderComboBox.getSelectedIndex();
 				String order = "ascending";
-				
 				Object [][] data = null;
-				
 				try {
-					
 					if(combo.getSelectedIndex()== 0)
 					{
 						data = Database.OrderListById(name, secim, order);
 					}
-					
 					else
 					{
 						data = Database.OrderListByIndex(name, secim, order);
 					}
-					
 					String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -1936,34 +1945,26 @@ public class DatabaseGUI {
 						columsName[i] = columarr[i][0] + " ( " + columarr[i][1] + " ) ";
 						System.out.println(columsName[i]);
 					}
-					
-					
+
 					panel_1.removeAll();
 					
 					JTable table = new JTable(data, columsName);
 					Font font = new Font("Arial", Font.PLAIN, 15); 
 					CustomCellRenderer renderer = new CustomCellRenderer(font);
 					for (int c = 0; c < table.getColumnCount(); c++) {
-					    table.getColumnModel().getColumn(c).setCellRenderer(renderer);
-					   
-					    table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					table.getColumnModel().getColumn(c).setCellRenderer(renderer);
+					table.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 					}
-					    JTableHeader headera = table.getTableHeader();
-				        headera.setFont(headera.getFont().deriveFont(16f).deriveFont(Font.BOLD));
-
-				        // Başlık kısmının kenarlığını ayarlama
-				        headera.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+					JTableHeader header = table.getTableHeader();
+				    header.setFont(header.getFont().deriveFont(16f).deriveFont(Font.BOLD));
+				    header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 	                JScrollPane scrollPane = new JScrollPane(table);
 	                panel_1.setLayout(new BorderLayout());
 	                panel_1.add(scrollPane, BorderLayout.CENTER);
-
-	                JTableHeader header = table.getTableHeader();
 	                panel_1.add(header, BorderLayout.NORTH);
-
 	                panel_1.revalidate();
 	                panel_1.repaint();
-					
-					
+	
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -1974,13 +1975,11 @@ public class DatabaseGUI {
 		AscendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
 		AscendingButton.setBounds(422, 115, 131, 30);
 		orderpanel.add(AscendingButton);
-		//addallpanel
 		addallpanel.setBackground(new Color(230, 230, 250));
 		addallpanel.setBounds(43, 304, 0, 0);
 		frmDatabase.getContentPane().add(addallpanel);
 		addallpanel.setLayout(null);
 		addallpanel.setVisible(true);
-		
 		
 		JProgressBar progressBar = new JProgressBar();
 		progressBar.setVisible(false);
@@ -1989,7 +1988,6 @@ public class DatabaseGUI {
 		addallpanel.add(progressBar);
 		
 		howmany = new JTextField();
-		
 		JLabel lblNewLabel_3 = new JLabel("");
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/wink (1).png")));
@@ -2004,14 +2002,11 @@ public class DatabaseGUI {
 		JButton btnRandomData = new JButton("Random Data");
 		btnRandomData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
 			addallpanel.setSize(752,200);
 			addallpanel.setVisible(true);
 			progressBar.setVisible(false);
 			progressBar.setValue(0);
-			panel.setSize(0,0);
-			
-				
+			panel.setSize(0,0);	
 			}
 		});
 		btnRandomData.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -2022,9 +2017,6 @@ public class DatabaseGUI {
 		btnRandomData.setBackground(new Color(230, 230, 250));
 		btnRandomData.setBounds(20, 159, 142, 40);
 		panel.add(btnRandomData);
-
-		
-		
 
 		howmany.getDocument().addDocumentListener(new DocumentListener() {
 		  public void changedUpdate(DocumentEvent e) {
@@ -2040,12 +2032,10 @@ public class DatabaseGUI {
 		  public void printText() {
 			  
 			try {
-				String text = howmany.getText().toString();
 		    if (Integer.parseInt(howmany.getText())<1000)
 		    {
 		    	lblNewLabel_3.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/wink (1).png")));
 		    	meowText.setText("Please !");
-		    	
 		    }
 		    else if (Integer.parseInt(howmany.getText())<10000)
 		    {
@@ -2056,8 +2046,7 @@ public class DatabaseGUI {
 		    {
 		    	lblNewLabel_3.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/angry (1).png")));
 		    	meowText.setText("PLEASEEE HELLLP !!!");
-		    }
-		    
+		    } 
 		    }
 	
 			 catch (Exception e) {
@@ -2069,31 +2058,22 @@ public class DatabaseGUI {
 		addallpanel.add(howmany);
 		howmany.setColumns(10);
 		
-		
-		
 		JLabel lblNewLabel_2 = new JLabel("How many records do you want?");
 		lblNewLabel_2.setFont(new Font("Tempus Sans ITC", Font.PLAIN, 14));
 		lblNewLabel_2.setBounds(280, 46, 202, 14);
 		addallpanel.add(lblNewLabel_2);
 		
-		
 		JButton btnNewButton_4 = new JButton("");
 		btnNewButton_4.setRolloverEnabled(false);
 		howmany.setText("");
-		
-		
 		howmany.addFocusListener(new FocusListener() {
 
             @Override
             public void focusGained(FocusEvent e) {
-                
-            	//System.out.println("bişey");
             }
             @Override
             public void focusLost(FocusEvent e) {
-            	
             	btnNewButton_4.setBorder(new TitledBorder(null, ""+howmany.getText(), TitledBorder.CENTER, TitledBorder.BELOW_BOTTOM, null, new Color(0, 191, 255)));
-
             }
             });
 		
@@ -2107,8 +2087,6 @@ public class DatabaseGUI {
 					System.out.println("bos");
 				}
 				else {
-					
-				
 				btnNewButton_4.setEnabled(false);
 				int number = Integer.parseInt(howmany.getText());
 				btnNewButton_4.setName(howmany.getText().toString());
@@ -2126,30 +2104,19 @@ public class DatabaseGUI {
 						String data[][] = new String[colnumber][2];
 
 						for (int i = 0; i <colnumber; i++) {
-
 							columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 							columarr[i][1] = Database.getTable(name).columns[i].type.toString();
-
 						}
 						
-						
-			
 						String[] arr = new String[colnumber];
 						
-						 isend = false;
 					for( int i = 0;i<number;i++) {
-						
-					
 						for (int k = 1 ;k<colnumber;k++) {
-					
 						if(columarr[k][1].equals("int")) {
-							
 							 	int min = 10; //
 						        int max = 9999; //
 						        int randomNumber = rand.nextInt((max - min) + 1) + min;
 						        arr[k] = randomNumber+"";
-						       
-					
 						}
 						else if(columarr[k][1].equals("char")){
 							int length = rand.nextInt(9) + 2; 
@@ -2169,51 +2136,35 @@ public class DatabaseGUI {
 				
 						}
 					        arr[k] = sb.toString(); 
-					       
-						
 					}
-					
-						
 						}
-						
 						 try {
 								Database.newData(arr, name);
-						
 							}
 						 catch (ClassNotFoundException | IOException  | java.lang.ArrayIndexOutOfBoundsException e2 ) {
 								// TODO Auto-generated catch block
 								e2.printStackTrace();
 							}
-			
-						
 						 int progress = (i + 1) * 100 / number;
 					        SwingUtilities.invokeLater(() -> {
 					            progressBar.setValue(progress);
 					        });
 				    }
-				
 					btnViewTable.doClick();
 					progressBar.setValue(0);
 					howmany.setText("");
 					progressBar.setValue(0);
 					btnNewButton_4.setEnabled(true);
-					
-				
 				});
 				Thread updateProgressBarThread = new Thread(() -> {
 				    while (addDataThread.isAlive()) {
 				       progrescount = progressBar.getValue();
 				         if(progrescount < 100) {
 				        	progrescount++;
-				        	
 				            SwingUtilities.invokeLater(() -> {
-				            	
-				            	progressBar.setValue(progrescount);
-				                
+				            progressBar.setValue(progrescount);      
 				            });
 				        }
-				        
-
 				        try {
 				            Thread.sleep(100);
 				        } catch (InterruptedException e1) {
@@ -2221,14 +2172,11 @@ public class DatabaseGUI {
 				        }
 				    }
 				});
-		
-				
 				addDataThread.start();
 				updateProgressBarThread.start();
 			}
 			}
-		});
-			
+		});	
 		btnNewButton_4.setBounds(328, 122, 86, 54);
 		addallpanel.add(btnNewButton_4);
 		
@@ -2243,9 +2191,9 @@ public class DatabaseGUI {
 		GeriBtn.setBackground(new Color(230, 230, 250));
 		GeriBtn.setBounds(10, 11, 64, 41);
 		addallpanel.add(GeriBtn);
-		
-		
+
 		JButton btnNewButton_1 = new JButton("Create Table");
+		btnNewButton_1.setForeground(new Color(238, 238, 238));
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				boolean error = false;
@@ -2264,14 +2212,8 @@ public class DatabaseGUI {
 							error=true;
 						}
 					}
-					
-					
-					
-					if(!error) {
-						
-					
-					
 
+					if(!error) {
 					String[][] records = new String[counter + 1][2];
 
 					String nametable = tablename.getText();
@@ -2290,11 +2232,8 @@ public class DatabaseGUI {
 						
 						e1.printStackTrace();
 					}
-					
-					
 
 					for(int i=1;i<columnname.length;i++) {
-						
 
 					columnname[i].setVisible(false);
 					datatype[i].setVisible(false);
@@ -2312,10 +2251,8 @@ public class DatabaseGUI {
 					btnViewTable.doClick();
 					
 					}
-					
 
 				}
-
 				else {
 					JOptionPane.showMessageDialog(null, "Column name  or data type is not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
@@ -2327,23 +2264,21 @@ public class DatabaseGUI {
 				}
 				
 				newtablepanel.setSize(0,0);
-				
-		
-				
-				
-				
 			}
 		});
 		btnNewButton_1.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));
 		btnNewButton_1.setBackground(new Color(50, 179, 200));
-		btnNewButton_1.setBounds(581, 430, 161, 46);
+		btnNewButton_1.setBounds(549, 398, 161, 46);
 		newtablepanel.add(btnNewButton_1);
 
 		JButton Helpbtn = new JButton("");
+		Helpbtn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		Helpbtn.setBorder(new EmptyBorder(0, 0, 0, 0));
+		Helpbtn.setBorderPainted(false);
+		Helpbtn.setBackground(new Color(230, 230, 250));
 		Helpbtn.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		       
-		    	  
+
 		    	        try {
 		    	            File htmlFile = new File("help/index_help.html");
 		    	            Desktop.getDesktop().browse(htmlFile.toURI());
@@ -2352,20 +2287,12 @@ public class DatabaseGUI {
 		    	        }
 		    	    }
 		    
-		    
 		});
 		Helpbtn.setHorizontalAlignment(SwingConstants.CENTER);
 		Helpbtn.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/Button-Help-icon.png")));
-		Helpbtn.setBounds(746, 11, 45, 43);
+		Helpbtn.setBounds(733, 11, 50, 40);
 		frmDatabase.getContentPane().add(Helpbtn);
-		
-		
-		
-		
-	
+
 			}
 }
-			
-			
-		
-			
+	

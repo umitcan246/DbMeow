@@ -958,7 +958,7 @@ public class DatabaseGUI {
 			}
 				else {
 					
-					System.out.println("Boş olamaz...!");
+					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}});
 		GroupLayout gl_searchpanel = new GroupLayout(searchpanel);
@@ -1336,7 +1336,7 @@ public class DatabaseGUI {
 		btnNewButton_3_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(updateid.getText().equals("")) {
-					System.out.println("bos olamass");
+					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 				int colnumber = Database.getTable(name).columns.length;
@@ -1739,7 +1739,7 @@ public class DatabaseGUI {
 					}
 
 					catch (Exception e1) {
-						JOptionPane.showMessageDialog(panel, "Could not open file", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(frmDatabase, "Could not open file", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 
 				}
@@ -1812,7 +1812,7 @@ public class DatabaseGUI {
 					}
 				}
 				if (empty) {
-					JOptionPane.showMessageDialog(frmDatabase, "Table name is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Table name can not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 
 				} else if (type) {
@@ -2084,7 +2084,7 @@ public class DatabaseGUI {
 			public void actionPerformed(ActionEvent e) {
 				
 				if(howmany.getText().toString().equals("")) {
-					System.out.println("bos");
+					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
 				btnNewButton_4.setEnabled(false);
@@ -2254,12 +2254,12 @@ public class DatabaseGUI {
 
 				}
 				else {
-					JOptionPane.showMessageDialog(frmDatabase, "Column name  or data type is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Column name  or data type can not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				}
 				else {
-					JOptionPane.showMessageDialog(frmDatabase, "Table name is not be null.", "ERROR",
+					JOptionPane.showMessageDialog(frmDatabase, "Table name can not be null.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 				

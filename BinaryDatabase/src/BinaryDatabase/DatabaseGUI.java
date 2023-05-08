@@ -1857,8 +1857,12 @@ public class DatabaseGUI {
 				orderpanel.setVisible(true);
 				
 				OrderComboBox.removeAllItems();
-				OrderComboBox.addItem(Database.getTable(name).columns[0].name.toString());
-				OrderComboBox.addItem(Database.getTable(name).columns[1].name.toString());
+				for(int i=0;i<Database.getTable(name).columns.length;i++) {
+					OrderComboBox.addItem(Database.getTable(name).columns[i].name.toString());
+					
+				}
+				
+				
 				
 				
 			}

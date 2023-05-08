@@ -49,7 +49,6 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTextArea;
 import java.awt.Toolkit;
 
-
 public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;
@@ -97,9 +96,6 @@ public class DatabaseGUI {
 	private JTextField searchByColumText;
 	private JTextField alldeleteid;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -158,9 +154,6 @@ public class DatabaseGUI {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	public void initialize() {
 		frmDatabase = new JFrame("binary file search");
 		frmDatabase.setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseGUI.class.getResource("/icon/cool.png")));
@@ -168,7 +161,7 @@ public class DatabaseGUI {
 		frmDatabase.setResizable(false);
 		frmDatabase.setTitle("DBMeow");
 		frmDatabase.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmDatabase.setPreferredSize(new Dimension(800, 600)); // pencere boyutu
+		frmDatabase.setPreferredSize(new Dimension(800, 600)); 
 		frmDatabase.setBounds(100, 100, 831, 628);
 		frmDatabase.getContentPane().setLayout(null);
 		JPanel panel_1 = new JPanel();
@@ -186,8 +179,6 @@ public class DatabaseGUI {
 		JPanel addallpanel = new JPanel();
 		addallpanel.setBackground(new Color(230, 230, 250));
 		
-		
-		//NewTablePanel
 		newtablepanel.setBackground(new Color(240, 240, 255));
 		newtablepanel.setBounds(29, 54, 0, 0);
 		frmDatabase.getContentPane().add(newtablepanel);
@@ -395,20 +386,16 @@ public class DatabaseGUI {
 					counter++;
 				}
 				
-
 				columnname[counter].setVisible(true);
 				datatype[counter].setVisible(true);
 			}
 		});
+		
 		btnAddRow.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));
 		btnAddRow.setBackground(new Color(50, 179, 200));
 		btnAddRow.setBounds(252, 11, 107, 30);
 		newtablepanel.add(btnAddRow);
 
-		
-
-		
-		
 		JButton btnDelCol = new JButton("Del Col");
 		btnDelCol.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -420,6 +407,7 @@ public class DatabaseGUI {
 				}		
 			}
 		});
+		
 		btnDelCol.setForeground(new Color(238, 238, 238));
 		btnDelCol.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 16));
 		btnDelCol.setBackground(new Color(50, 179, 200));
@@ -432,8 +420,6 @@ public class DatabaseGUI {
 		btnViewTable.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "View Table", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
 		btnViewTable.setVisible(false);
 		
-		
-
 		JButton btnNewButton = new JButton("");
 		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnNewButton.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "New Table", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
@@ -452,6 +438,7 @@ public class DatabaseGUI {
 				newtablepanel.setVisible(true);
 			}
 		});
+		
 		btnNewButton.setBackground(new Color(230, 230, 250));
 		btnNewButton.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnNewButton.setBounds(29, 528, 100, 48);
@@ -675,6 +662,7 @@ public class DatabaseGUI {
 
 			}
 		});
+		
 		btnInsert.setFont(new Font("Arial Black", Font.BOLD, 14));
 		btnInsert.setBackground(new Color(230, 230, 250));
 		btnInsert.setBounds(249, 528, 113, 48);
@@ -708,8 +696,7 @@ public class DatabaseGUI {
 						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
-				
-				
+								
 				if(!error) {
 					
 				
@@ -728,7 +715,6 @@ public class DatabaseGUI {
 					}
 					else{
 					
-
 					String temparr[][] = new String[1][Database.getTable(name).columns.length];
 					String colname[] = new String[Database.getTable(name).columns.length];
 
@@ -767,13 +753,13 @@ public class DatabaseGUI {
 					long endTime = System.currentTimeMillis();
 					
 					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endTime-startTime) + "ms");
-				}} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
+				}} catch (ClassNotFoundException | IOException e1) {					
 					e1.printStackTrace();
 				}}
 				
 			}
 		});
+		
 		btnSearchByID.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByID.setBackground(new Color(230, 230, 250));
 
@@ -818,6 +804,7 @@ public class DatabaseGUI {
 			
 			}
 		});
+		
 		btnTableData.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnTableData.setBackground(new Color(230, 230, 250));
 		btnTableData.setBounds(372, 528, 100, 48);
@@ -868,7 +855,6 @@ public class DatabaseGUI {
 
 						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
-
 					}
 
 					for (int i = 0; i < Database.getTable(name).columns.length; i++) {
@@ -899,12 +885,12 @@ public class DatabaseGUI {
 					 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : " + (endtime-startTime) + "ms");
 					
 					}} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				}
 			}
 		});
+		
 		btnSearchByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearchByOffset.setBackground(new Color(230, 230, 250));
 		
@@ -927,14 +913,12 @@ public class DatabaseGUI {
 					if(temp.equals("int")) {
 						try {
 							
-							Integer.parseInt(searchByColumText.getText());
-							
+							Integer.parseInt(searchByColumText.getText());							
 						}
 						catch (Exception e1) {
 							error  = true;
 							JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
-						}
-						
+						}						
 					}
 				
 					if(!error) {
@@ -947,17 +931,14 @@ public class DatabaseGUI {
 					String[][] arr = null;
 					int colnumber = Database.getTable(name).columns.length;
 					try {
-						
-					
-					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
-					
 				
+					arr =Database.searchWordOrNuM(selectedValue,SearchText, name);
+									
 					if(arr.length==0) {
 						JOptionPane.showMessageDialog(frmDatabase, "Record not found! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE); 
 					}
 					else {
-						
-					
+		
 					String colname[] = new String[colnumber];
 
 					String columarr[][] = new String[colnumber][2];
@@ -966,7 +947,6 @@ public class DatabaseGUI {
 
 						columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 						columarr[i][1] = Database.getTable(name).columns[i].type.toString();
-
 					}
 
 					for (int i = 0; i < colnumber; i++) {
@@ -992,7 +972,8 @@ public class DatabaseGUI {
 					panel_1.add(table, BorderLayout.CENTER);
 					panel_1.revalidate();
 					panel_1.repaint();
-				} }catch (ClassNotFoundException | IOException e1) {
+				   }  
+				   }catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}	
 			}
@@ -1002,6 +983,7 @@ public class DatabaseGUI {
 					JOptionPane.showMessageDialog(frmDatabase, "Empty entry! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}});
+		
 		GroupLayout gl_searchpanel = new GroupLayout(searchpanel);
 		gl_searchpanel.setHorizontalGroup(
 			gl_searchpanel.createParallelGroup(Alignment.LEADING)
@@ -1073,7 +1055,6 @@ public class DatabaseGUI {
 
 					columarr[i][0] = Database.getTable(name).columns[i].name.toString();
 					columarr[i][1] = Database.getTable(name).columns[i].type.toString();
-
 				}
 
 				String dataarr[][] = null;
@@ -1130,7 +1111,6 @@ public class DatabaseGUI {
 					e1.printStackTrace();
 				}
 			}
-
 		});
 
 		btnViewTable.setFont(new Font("Dubai", Font.BOLD, 10));
@@ -1138,7 +1118,6 @@ public class DatabaseGUI {
 		btnViewTable.setBounds(139, 528, 100, 48);
 		frmDatabase.getContentPane().add(btnViewTable);
 
-		//Update Panel
 		updatepanel.setBounds(31, 309, 0, 0);
 		frmDatabase.getContentPane().add(updatepanel);
 		updatepanel.setLayout(null);
@@ -1302,6 +1281,7 @@ public class DatabaseGUI {
 
 			}
 		});
+		
 		btnNewButton_3.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnNewButton_3.setBackground(new Color(230, 230, 250));
 		btnNewButton_3.setBounds(482, 528, 100, 48);
@@ -1331,8 +1311,6 @@ public class DatabaseGUI {
 
 						error = true;
 					}
-					
-					
 				}
 				
 				if(!error) {
@@ -1355,7 +1333,6 @@ public class DatabaseGUI {
 					
 					dataarr = Database.readAll(name);
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -1384,6 +1361,7 @@ public class DatabaseGUI {
 				}
 			}
 		});
+		
 		btnSearch.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearch.setBackground(new Color(230, 230, 250));
 		btnSearch.setBounds(194, 0, 52, 38);
@@ -1427,8 +1405,6 @@ public class DatabaseGUI {
 				
 				if(!error) {
 					
-				
-				
 				try {
 					long startTime = System.currentTimeMillis();
 					Database.updateDataById(id, name, arr);
@@ -1441,6 +1417,7 @@ public class DatabaseGUI {
 				}
 			}}
 		});
+		
 		btnNewButton_3_1.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnNewButton_3_1.setBackground(new Color(230, 230, 250));
 		btnNewButton_3_1.setBounds(485, 0, 100, 75);
@@ -1480,8 +1457,7 @@ public class DatabaseGUI {
 							}
 						}
 					}
-					
-					
+				
 					if(!error) {
 				
 				try {
@@ -1491,18 +1467,17 @@ public class DatabaseGUI {
 					JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
 					btnViewTable.doClick();
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}	}
 			}
 		});
+		
 		btnNewButton_3_2.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnNewButton_3_2.setBackground(new Color(230, 230, 250));
 		btnNewButton_3_2.setBounds(588, 0, 100, 75);
 		updatepanel.add(btnNewButton_3_2);
 
-		//DeletePanel
 		deletepanel.setBounds(31, 321, 0, 0);
 		frmDatabase.getContentPane().add(deletepanel);
 		deletepanel.setLayout(null);
@@ -1535,14 +1510,11 @@ public class DatabaseGUI {
 						JOptionPane.showMessageDialog(frmDatabase,"Query is not String! Please enter a valid query and try again.", "Error", JOptionPane.ERROR_MESSAGE);
 
 						error = true;
-					}
-					
+					}					
 				}
 				
 				if(!error) {
-					
-				
-				
+
 				int colnumber = Database.getTable(name).columns.length;
 
 				int id = Integer.parseInt(deleteid.getText());
@@ -1592,6 +1564,7 @@ public class DatabaseGUI {
 				}}
 			}
 		});
+		
 		btnSearch_1.setFont(new Font("Dubai", Font.BOLD, 10));
 		btnSearch_1.setBackground(new Color(230, 230, 250));
 		btnSearch_1.setBounds(224, 36, 58, 40);
@@ -1674,8 +1647,6 @@ public class DatabaseGUI {
 				}
 				
 				else {
-					
-				
 					try {
 						 
 						Integer.parseInt(deleteid.getText());
@@ -1685,9 +1656,7 @@ public class DatabaseGUI {
 						JOptionPane.showMessageDialog(frmDatabase, "Query is not String! Please enter a valid query.", "Error", JOptionPane.ERROR_MESSAGE); 
 					}
 				
-					if(!error) {
-						
-					
+					if(!error) {		
 				try {
 					id = Integer.parseInt(deleteid.getText());
 					long startTime = System.currentTimeMillis();
@@ -1705,7 +1674,6 @@ public class DatabaseGUI {
 					}
 					
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 					}
@@ -1714,6 +1682,7 @@ public class DatabaseGUI {
 			
 			}
 		});
+		
 		deleteDataByOffset.setFont(new Font("Dubai", Font.BOLD, 10));
 		deleteDataByOffset.setBackground(new Color(230, 230, 250));
 		deleteDataByOffset.setBounds(182, 104, 100, 40);
@@ -1747,7 +1716,6 @@ public class DatabaseGUI {
 				}
 				else {
 		
-					
 					try {
 						Integer.parseInt(alldeleteid.getText().toString());
 					}
@@ -1757,8 +1725,7 @@ public class DatabaseGUI {
 					}
 					
 					if(!error) {
-						
-					
+
 				id = Integer.parseInt(alldeleteid.getText().toString());
 				secim = alldeletecombo.getSelectedIndex();
 				if(id>lastId && lastId>0) {
@@ -1770,7 +1737,6 @@ public class DatabaseGUI {
 									Database.deleteDataByOffset(lastId-i, name);
 									
 								} catch (ClassNotFoundException | IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
 							}
@@ -1795,7 +1761,6 @@ public class DatabaseGUI {
 						
 						
 					} catch (ClassNotFoundException | IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					}
@@ -1812,7 +1777,6 @@ public class DatabaseGUI {
 							Database.deleteDataByOffset(lastId-i, name);
 							
 						} catch (ClassNotFoundException | IOException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 					}
@@ -1829,6 +1793,7 @@ public class DatabaseGUI {
 				}
 			}
 		});
+		
 		btnDeleteData.setFont(new Font("Dubai", Font.PLAIN, 14));
 		btnDeleteData.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 3, true), "", TitledBorder.CENTER, TitledBorder.ABOVE_BOTTOM, null, new Color(0, 0, 0)));
 		btnDeleteData.setBackground(new Color(230, 230, 250));
@@ -1989,6 +1954,7 @@ public class DatabaseGUI {
 
 			}
 		});
+		
 		btnInsertTable_1.setIcon(new ImageIcon(DatabaseGUI.class.getResource("/icon/home.png")));
 		btnInsertTable_1.setFont(new Font("Arial Black", Font.BOLD, 14));
 		btnInsertTable_1.setBackground(new Color(230, 230, 250));
@@ -2113,7 +2079,6 @@ public class DatabaseGUI {
                 JOptionPane.showMessageDialog(frmDatabase, "Time consumed : "+ (endTime-startTime) + " ms");
    
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
 
@@ -2184,12 +2149,12 @@ public class DatabaseGUI {
 	                panel_1.repaint();
 	
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} 
 			
 				}
 			});
+		
 		AscendingButton.setFont(new Font("Tahoma", Font.BOLD, 10));
 		AscendingButton.setBounds(422, 115, 131, 30);
 		orderpanel.add(AscendingButton);
@@ -2375,7 +2340,6 @@ public class DatabaseGUI {
 								Database.newData(arr, name);
 							}
 						 catch (ClassNotFoundException | IOException  | java.lang.ArrayIndexOutOfBoundsException e2 ) {
-								// TODO Auto-generated catch block
 								e2.printStackTrace();
 							}
 						 int progress = (i + 1) * 100 / number;

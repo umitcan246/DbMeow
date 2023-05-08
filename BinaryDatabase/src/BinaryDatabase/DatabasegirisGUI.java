@@ -34,9 +34,6 @@ public class DatabasegirisGUI {
 	private JPasswordField passwordField;
 	private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,17 +46,13 @@ public class DatabasegirisGUI {
 			}
 		});
 	}
-	/**
-	 * Create the application.
-	 */
+
 	public DatabasegirisGUI() {
 		
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+
 	private void initialize() {
 		DatabaseGUI dbGUI = new DatabaseGUI();
 		String adminusername = "admin";
@@ -142,6 +135,7 @@ public class DatabasegirisGUI {
 				
 			}
 		});
+		
 		btnNewButton.setForeground(new Color(0, 0, 0));
 		btnNewButton.setBackground(new Color(255, 182, 193));
 		btnNewButton.setFont(new Font("Century", Font.BOLD, 16));

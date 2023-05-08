@@ -621,7 +621,7 @@ public class DatabaseGUI {
 				deletepanel.setVisible(false);
 				newtablepanel.setVisible(false);
 				updatepanel.setVisible(false);
-
+				btnViewTable.doClick();
 				String columsName[] = new String[Database.getTable(name).columns.length];
 				String columarr[][] = new String[Database.getTable(name).columns.length][2];
 
@@ -674,7 +674,7 @@ public class DatabaseGUI {
 		panel_1.setLayout(null);
 
 		//Search Panel
-		searchpanel.setBounds(43, 321, 752, 200);
+		searchpanel.setBounds(43, 321, 0, 0);
 		frmDatabase.getContentPane().add(searchpanel);
 
 		JButton btnSearchByID = new JButton("Search");
@@ -781,7 +781,7 @@ public class DatabaseGUI {
 		btnTableData.setVisible(false);
 		btnTableData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				btnViewTable.doClick();
 				ColNameBox.removeAllItems();
 				String colname[] = new String[Database.getTable(name).columns.length];
 				for (int i = 1; i < Database.getTable(name).columns.length; i++) {
@@ -1110,6 +1110,7 @@ public class DatabaseGUI {
 				 catch (ClassNotFoundException | IOException e1) {
 					e1.printStackTrace();
 				}
+				newtablepanel.setSize(0,0);
 			}
 		});
 
@@ -1269,6 +1270,7 @@ public class DatabaseGUI {
 		btnNewButton_3.setVisible(false);
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				btnViewTable.doClick();
 				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
@@ -1807,7 +1809,7 @@ public class DatabaseGUI {
 		btnNewButton_3_3.setVisible(false);
 		btnNewButton_3_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				btnViewTable.doClick();
 				addallpanel.setVisible(false);
 				orderpanel.setVisible(false);
 				panel.setVisible(false);
@@ -1844,7 +1846,7 @@ public class DatabaseGUI {
 		OrderBtn.setBorder(new TitledBorder(new LineBorder(new Color(0, 191, 255), 2, true), "Order", TitledBorder.CENTER, TitledBorder.TOP, null, new Color(0, 191, 255)));
 		OrderBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				btnViewTable.doClick();
 				addallpanel.setVisible(false);
 				searchpanel.setVisible(false);
 				panel.setVisible(false);
@@ -1889,7 +1891,7 @@ public class DatabaseGUI {
 		btnInsertTable.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
-				JFileChooser j = new JFileChooser("..\\DbMeow");
+				JFileChooser j = new JFileChooser("..\\BinaryDatabase");
 				j.setAcceptAllFileFilterUsed(false); // Disable "All files" filter
 				// only show bin files
 				j.setFileFilter(new MetadataFileFilter());
@@ -2440,6 +2442,7 @@ public class DatabaseGUI {
 					tablename.setText("");
 					counter=0;
 					
+					
 					btnViewTable.setVisible(true);
 					btnInsert.setVisible(true);
 					btnTableData.setVisible(true);
@@ -2447,7 +2450,7 @@ public class DatabaseGUI {
 					btnNewButton_3_3.setVisible(true);
 					OrderBtn.setVisible(true);
 					btnViewTable.doClick();
-					
+					newtablepanel.setSize(0,0);
 					}
 
 				}

@@ -3,12 +3,6 @@ package BinaryDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Scanner;
-
-import javax.swing.JOptionPane;
-
-import BinaryDatabase.Database.Table;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -84,7 +78,6 @@ public class Database {
 	}
     
     public static Object[][] OrderListByIndex(String tablename, int secim, String order) throws IOException {
-    	Scanner scanner = new Scanner(System.in);
     	Table xTable = new Table();
 
     	xTable.name = tablename;
@@ -141,8 +134,6 @@ public class Database {
     }
     
     public static Object[][] OrderListById(String tablename, int secim, String order) throws IOException {
-    	
-    	Scanner scanner = new Scanner(System.in);
     	Table xTable = new Table();
     	xTable.name = tablename;
     	String fileName = xTable.name ; 
@@ -200,40 +191,36 @@ public class Database {
     
     public static void newTable(String recorddata[][], String nameTable) throws FileNotFoundException, IOException
     {
-    	Scanner scanner = new Scanner(System.in);
-
-    	// Get table information from user
     	Table table = new Table();
     	
     	table.name = nameTable;
     	table.num_columns = recorddata.length;
-    	String fileName = table.name + "_metadata.bin"; // Metadata dosyasının adını değiştirdik
+    	String fileName = table.name + "_metadata.bin"; 
 
-    	try (RandomAccessFile raf = new RandomAccessFile(fileName, "rw")) { // Try-with-resources kullanımını öneririm
-    	    // Kolon sayısını yaz
+    	try (RandomAccessFile raf = new RandomAccessFile(fileName, "rw")) { 
+
     	    raf.writeInt(table.num_columns);
     	    table.columns[0] = new Column();
     	    table.columns[0].name=recorddata[0][0];
     	    table.columns[0].type=recorddata[0][1];
     	    byte[] colNameBytes = table.columns[0].name.getBytes("UTF-8");
     	    byte[] colTypeBytes = table.columns[0].type.getBytes("UTF-8");
-    	    raf.writeInt(colNameBytes.length); // Kolon adı boyutunu yaz
-	        raf.write(colNameBytes); // Kolon adını yaz
-	        raf.writeInt(colTypeBytes.length); // Kolon tipi boyutunu yaz
-	        raf.write(colTypeBytes); // Kolon tipini yaz
-    	    // Her bir kolon için adını ve tipini yaz
+    	    raf.writeInt(colNameBytes.length); 
+	        raf.write(colNameBytes); 
+	        raf.writeInt(colTypeBytes.length);
+	        raf.write(colTypeBytes); 
+    	    
     	    for (int i = 1; i < table.num_columns; i++) {
     	    	 table.columns[i] = new Column();
 	    	     table.columns[i].name =recorddata[i][0] ;
 	    	     table.columns[i].type = recorddata[i][1] ;
-    	               
-    	        // Kolon adı ve tipini byte dizisine çevirerek yaz
+    	                  	       
     	        colNameBytes = table.columns[i].name.getBytes("UTF-8");
     	        colTypeBytes = table.columns[i].type.getBytes("UTF-8");
-    	        raf.writeInt(colNameBytes.length); // Kolon adı boyutunu yaz
-    	        raf.write(colNameBytes); // Kolon adını yaz
-    	        raf.writeInt(colTypeBytes.length); // Kolon tipi boyutunu yaz
-    	        raf.write(colTypeBytes); // Kolon tipini yaz
+    	        raf.writeInt(colNameBytes.length);
+    	        raf.write(colNameBytes); 
+    	        raf.writeInt(colTypeBytes.length); 
+    	        raf.write(colTypeBytes);
     	    }
     	} catch (IOException e) {
     	    e.printStackTrace();
@@ -255,12 +242,10 @@ public class Database {
     	fileName=xTable.name;
     	 int numChartype=0;
          int numInttype=0;
-         int numColumns1=0;
          
     	 try (RandomAccessFile raf = new RandomAccessFile(fileName, "r")) { 
              
              int numColumns = raf.readInt();
-             numColumns1=numColumns;
              xTable.columns=new Column[numColumns];
 
              for (int i = 0; i < numColumns; i++) {
@@ -305,9 +290,7 @@ public class Database {
     			byte[] veri = new byte[newValue.length()]; 
                 int okunanBaytSayisi = recordsFile.read(veri); 
                 String currPrimary =new String(veri, 0, okunanBaytSayisi, StandardCharsets.UTF_8);
-                if (currPrimary.equalsIgnoreCase(newValue)) { 
-                   
-                   
+                if (currPrimary.equalsIgnoreCase(newValue)) {  
                    return false;
                 }	    
                 
@@ -341,8 +324,7 @@ public class Database {
     }
     public static void newData(String[]arr ,String tablename ) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-    	Scanner scanner = new Scanner(System.in);
-        
+
         String fileName = tablename;
         String temp=fileName;
        
@@ -358,7 +340,7 @@ public class Database {
         	raf.seek(raf.length());
         	 RandomAccessFile indexFile = new RandomAccessFile(temp+"Index.bin", "rw");
              long lastId = -1;
-             long lastOffset = -1;
+             
     
              if(indexFile.length()==4) {
             	 lastId = 0;
@@ -369,19 +351,17 @@ public class Database {
                  	 
     		          caf.seek(caf.length() - 16);
                       long id = caf.readLong(); 
-                      long offset = caf.readLong();
-                      
+                 
                       lastId = id; 
-                      lastOffset = offset;
+                     
 
                   } catch (IOException e) {
                       e.printStackTrace();
                   }
-     
              }
+             
              int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype; 
-        	
-      
+
                 if(lastId==0) {
                 	raf.seek(0);
                 }
@@ -391,8 +371,7 @@ public class Database {
                     if(table.columns[j].type.equals("int") && j == 0) {
                         int value = (int) lastId + 1;   
                         raf.writeInt(value);
-                        RECORD_SIZE=RECORD_SIZE-INT_SIZE;
-       
+                        RECORD_SIZE=RECORD_SIZE-INT_SIZE;       
                     }
                     else if (table.columns[j].type.equals("int")) {
                         
@@ -400,10 +379,8 @@ public class Database {
                         int a = Integer.parseInt(value);
                         raf.writeInt(a);
                         
-                        RECORD_SIZE=RECORD_SIZE-INT_SIZE;
-                       
-                    } 
-                    
+                        RECORD_SIZE=RECORD_SIZE-INT_SIZE;                    
+                    }                    
                     else if (table.columns[j].type.equals("char")) {
   
                         String value = arr[j];
@@ -414,31 +391,23 @@ public class Database {
                         for (int z = 0; z < x; z++) {
                             raf.writeByte(0);
                         }   
-                    } 
-                   
-                   
+                    }   
                 }
-                  
-   
+
                 indexFile.seek(indexFile.length());
                 long id = lastId + 1;
-                long offset =raf.getFilePointer();
-                String line = id + "," + offset + System.lineSeparator();
-                indexFile.writeLong(id);
-              
+                long offset =raf.getFilePointer();     
+                indexFile.writeLong(id);             
                 indexFile.writeLong(offset);                  
        
            indexFile.close();          
         } catch (IOException e) {
             e.printStackTrace();
         }    	
-    }
-    
+    }  
     
     public static void updateDataById(int id , String tablename, String[] data) throws FileNotFoundException, IOException, ClassNotFoundException{
-    	  	
-        	Scanner scanner = new Scanner(System.in);
-           
+
             int currId=-1;
             
             String fileName = tablename;
@@ -452,18 +421,16 @@ public class Database {
             try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "rw")) {
                 int search_id = id;    
                 recordsFile.seek(0);
-                boolean found=false;
+               
                 while (recordsFile.getFilePointer() < recordsFile.length()) {
                      currId = recordsFile.readInt();
                     if (currId == search_id) { 
-                        
-                        found=true;     
-                        
+
                         for(int i=1;i<numInttype+numChartype;i++) {
                         	
                 	    	if(xTable.columns[i].type.equals("int") ) {
                 	    		
-                	    		int value = recordsFile.readInt();
+                	    		recordsFile.readInt();
                                 int newValue =  Integer.parseInt(data[i]);
                                 recordsFile.seek(recordsFile.getFilePointer()-INT_SIZE);
                                 recordsFile.writeInt(newValue);            
@@ -489,23 +456,20 @@ public class Database {
                                 	}
                                 }                                     
                             } 
-                	    }
-                        
+                	    }                        
                         break;
                     }
+                    
                     int x=RECORD_SIZE*currId;
                     recordsFile.seek(x);
-                }
-             
+                }             
             } catch (IOException e) {
                 e.printStackTrace();
             }  	
     }   
     
     public static SearchResult searchID(String fileName, int id) {
-    	
-    	Scanner scanner = new Scanner(System.in);
-    	
+
     	Index index = new Index();
     	boolean found = false;
     	
@@ -526,50 +490,39 @@ public class Database {
                     found = true;
                     break;
                 }
-            }
-                        
-           
+            }     
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        return new SearchResult(index, found);
-		
+        return new SearchResult(index, found);	
     }
     
     public static void updateDataByOffset(int id, String tablename, String data[]) throws FileNotFoundException, IOException, ClassNotFoundException{
-    	
-    	Scanner scanner = new Scanner(System.in);
-     
-        String fileName = tablename;
-        
-        Table xTable=getTable(fileName);
-       
+
+        String fileName = tablename;        
+        Table xTable=getTable(fileName);      
         SearchResult result = searchID(fileName,id);
 
         if (result.found) {           
             RandomAccessFile records_file1 = new RandomAccessFile(fileName + "Records.bin", "rw");
-           
-            Record records;
+       
             int numInttype = xTable.counts.countInt;
             int numChartype = xTable.counts.countChar;
 
             int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype; 
          
             records_file1.seek(result.index.offset - RECORD_SIZE);
-            int c = records_file1.readInt();
-            
+            records_file1.readInt();
                       
-            
             for (int i = 1; i < numInttype + numChartype; i++) {
             	
                 if (xTable.columns[i].type.equals("int")) {
                 	
-                    int value = records_file1.readInt();
+                    records_file1.readInt();
                     int newValue = Integer.parseInt(data[i]);  
                     records_file1.seek(records_file1.getFilePointer()-INT_SIZE);
-                    records_file1.writeInt(newValue);
-                    
+                    records_file1.writeInt(newValue);                    
                 } 
                 else if (xTable.columns[i].type.equals("char")) {
                     
@@ -592,16 +545,13 @@ public class Database {
                     }           
                 }
             }
-
             records_file1.close();
         }
     }
     
     public static String[] searchData(int id , String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-    	Scanner scanner = new Scanner(System.in);
-    	
-    	
+  
         String fileName = tablename;
         
         Table xTable=getTable(fileName);
@@ -612,7 +562,6 @@ public class Database {
            
             RandomAccessFile records_file1 = new RandomAccessFile(fileName + "Records.bin", "r");
 
-            Record records;
             int numInttype = xTable.counts.countInt;
             int numChartype = xTable.counts.countChar;
 
@@ -624,16 +573,14 @@ public class Database {
             	
                 if (xTable.columns[i].type.equals("int")) {
                     int value = records_file1.readInt();
-                    searcharr[i] = value+"";
-                  
+                    searcharr[i] = value+"";                  
                 } 
                 else if (xTable.columns[i].type.equals("char")) {
                     
                     byte[] veri = new byte[CHAR_SIZE]; 
                     int okunanBaytSayisi = records_file1.read(veri); 
                     String value =new String(veri, 0, okunanBaytSayisi, StandardCharsets.UTF_8);
-                    searcharr[i] = value.replaceAll("\\p{C}", "");
-               
+                    searcharr[i] = value.replaceAll("\\p{C}", "");              
                 }
             }
             records_file1.close();
@@ -642,9 +589,7 @@ public class Database {
     }
     
 public static String [] seqSearchById(int id, String tablename) throws IOException, ClassNotFoundException{
-    	
-    	Scanner scanner = new Scanner(System.in);
-    	
+
         String fileName = tablename;
         
         Table xTable=getTable(fileName);
@@ -655,9 +600,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
 	    
         int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype;
           
-        try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {
-        	boolean found=false;
-        	
+        try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {     	
            
             int search_id = id;
             
@@ -665,10 +608,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
             
             while (recordsFile.getFilePointer() < recordsFile.length()) {
                  currId = recordsFile.readInt(); 
-                 if (currId == search_id) { 
-                    
-                    found=true;
-         
+                 if (currId == search_id) {          
                     searcharr2[0] = search_id+""; 
                     for(int i=1;i<numInttype+numChartype;i++) {
                     	
@@ -699,72 +639,56 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
     }
     
     public static String[][] readAll(String tablename) throws IOException, ClassNotFoundException {
-    	
-        Scanner scanner = new Scanner(System.in);
-        
+
         String fileName = tablename;
         
         Table xTable=getTable(fileName);
         int numInttype=xTable.counts.countInt;
 	    int numChartype=xTable.counts.countChar;
 	    
-	    int INT_SIZE = 4; // int tipindeki sütunların byte boyutu
-        int CHAR_SIZE = 20; // char tipindeki sütunların byte boyutu
-        int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype; // her bir kaydın toplam boyutu
-        	
-       
+        int RECORD_SIZE = INT_SIZE * numInttype + CHAR_SIZE * numChartype;
+
         int id = 0;
         String[][] data = null;
-        
-       
-       
+          
         try(RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {
         	
-        	if(  recordsFile.length()/ RECORD_SIZE>0){
+        	if(recordsFile.length()/ RECORD_SIZE>0) {
+        		
         	 data =  new String[(int) (recordsFile.length()/RECORD_SIZE)][numChartype+numInttype];
         	}
+        	
         	recordsFile.seek(0);
         	int count= 0;
-        	
-        	
-        	 if(recordsFile.length()/ RECORD_SIZE>0){
-        		 
-        	
-
-	        while (recordsFile.getFilePointer() < recordsFile.length()) {	
-	        	
-	        	  
-	        	id = recordsFile.readInt(); 
-	        	
-	        	data[count][0] = id+"";
-	          
-	        	
-	        	for(int i=1;i<numInttype+numChartype;i++) 
-	        	{
-	        		
-	        		if(xTable.columns[i].type.equals("int") ) 
-	        		{
-	    	    		int value = recordsFile.readInt(); 
-	                    
-	                    data[count][i] = value+"";
-	                    
-	                }
-	        		
-	                else if (xTable.columns[i].type.equals("char")) 
-	                {
-	                	byte[] veri = new byte[CHAR_SIZE]; 
-                        int okunanBaytSayisi = recordsFile.read(veri); // verileri oku ve okunan bayt sayısını a
-                        String value =new String(veri, 0, okunanBaytSayisi, StandardCharsets.UTF_8);
-                        data[count][i] =value.replaceAll("\\p{C}", "");
-                                           
-	                }  
-	        		
-	        		
-	    	    	 	    	
-	            }
-	        	count++;
-	        	int x=id*RECORD_SIZE;
-	            recordsFile.seek(x);   
+ 	
+            if(recordsFile.length()/ RECORD_SIZE>0) {
+            	
+		        while (recordsFile.getFilePointer() < recordsFile.length()) {	    	  
+		        	id = recordsFile.readInt(); 
+		        	
+		        	data[count][0] = id+"";
+		        	
+		        	for(int i=1;i<numInttype+numChartype;i++) 
+		        	{		        		
+		        		if(xTable.columns[i].type.equals("int") ) 
+		        		{
+		    	    		int value = recordsFile.readInt(); 
+		                    
+		                    data[count][i] = value+"";		                    
+		                }
+		        		
+		                else if (xTable.columns[i].type.equals("char")) 
+		                {
+		                	byte[] veri = new byte[CHAR_SIZE]; 
+		                    int okunanBaytSayisi = recordsFile.read(veri); // verileri oku ve okunan bayt sayÄ±sÄ±nÄ± a
+		                    String value =new String(veri, 0, okunanBaytSayisi, StandardCharsets.UTF_8);
+		                    data[count][i] =value.replaceAll("\\p{C}", "");		                                       
+		                }   	    	
+		            }
+		        	
+		        	count++;
+		        	int x=id*RECORD_SIZE;
+		            recordsFile.seek(x);   
 	            
 	        }
 	        	recordsFile.close();
@@ -778,10 +702,7 @@ public static String [] seqSearchById(int id, String tablename) throws IOExcepti
     }
     
 public static boolean deleteDataByOffset(int id,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
-    	
-    	Scanner scanner = new Scanner(System.in);
-
-       
+ 
         String fileName = tablename;
         Table xTable=getTable(fileName);
             
@@ -834,9 +755,6 @@ public static boolean deleteDataByOffset(int id,String tablename) throws FileNot
     }
 
 public static boolean deleteDataById(int id , String tablename) throws FileNotFoundException, IOException, ClassNotFoundException{
-	
-	Scanner scanner = new Scanner(System.in);
-   
     String fileName = tablename;
     Table xTable=getTable(fileName);
     int currId=-1;
@@ -849,8 +767,7 @@ public static boolean deleteDataById(int id , String tablename) throws FileNotFo
     try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {
        
         int search_id = id; 
-        recordsFile.seek(0);
-      
+        recordsFile.seek(0);   
         
         while (recordsFile.getFilePointer() < recordsFile.length()) {
              currId = recordsFile.readInt(); 
@@ -907,8 +824,8 @@ public static boolean deleteDataById(int id , String tablename) throws FileNotFo
     }
 	return found;	
 }
-public static String [][] searchWordOrNuM(String colsName,String SearchText ,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
-{
+ public static String [][] searchWordOrNuM(String colsName,String SearchText ,String tablename) throws FileNotFoundException, IOException, ClassNotFoundException
+ {
 	
 	
     String fileName = tablename;
@@ -917,8 +834,6 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
    
     String[] searcharrWord = null;
     
-    
-    int currId=-1;
     int numInttype=xTable.counts.countInt;
     int numChartype=xTable.counts.countChar;
     
@@ -931,18 +846,12 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
       
     try (RandomAccessFile recordsFile = new RandomAccessFile(fileName + "Records.bin", "r")) {
     	       	
-    	boolean found=false;
-        
-        String colName = colsName;
+    	String colName = colsName;
                     
         recordsFile.seek(4);
-        
-       
-        
+
         for (int j = 1; j < numInttype + numChartype; j++) {
-        	
-        	
- 
+
             if(xTable.columns[j].name.equalsIgnoreCase(colName)) {
                colType = xTable.columns[j].type;
                
@@ -950,27 +859,21 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
             }
             if(xTable.columns[j].type.equals("int") ) {
             	
-            	size += INT_SIZE;
-            	
-            	
+            	size += INT_SIZE;	            	
             }
             else {
-            	size += CHAR_SIZE;
-            	
-            }
-            
+            	size += CHAR_SIZE;           	
+            }          
         }
         
         if(colType.equals("int") ) {
 	    		
-             search1 = Integer.parseInt(SearchText);
-                          
+             search1 = Integer.parseInt(SearchText);                         
         }
     	
         else if (colType.equals("char")) {
         	 
-             search2 = SearchText;
-             
+             search2 = SearchText;         
         }
         
         int x=size;
@@ -980,8 +883,6 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
         	if(colType.equals("int") ) {
         		int value = recordsFile.readInt();
         		if(value == search1) {
-        			found=true;
-        			
         			recordsFile.seek((int)recordsFile.getFilePointer()- (size+INT_SIZE));
         			 searcharrWord=new String [xTable.columns.length];
 	            	  for (int i = 0; i < numInttype + numChartype; i++) {
@@ -1000,20 +901,15 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
 	                       
 	                      }
 	                  }
-	            	  duplicates.add(searcharrWord);
-	            	  
-	             }
-        		
-        		
+	            	  duplicates.add(searcharrWord);	            	  
+	             }	
         	}
         	 else if (colType.equals("char")) {
         		 byte[] veri = new byte[CHAR_SIZE]; 
-	             int okunanBaytSayisi = recordsFile.read(veri);
+	             recordsFile.read(veri);
 	             String value =new String(veri, 0, search2.length(), StandardCharsets.UTF_8);
-	             
-	             
+	             	             
 	             if(value.equalsIgnoreCase(search2)) {
-	            	 found=true;
 	            	 recordsFile.seek((int)recordsFile.getFilePointer()- (size+CHAR_SIZE));	
 	            	
 	            	 searcharrWord=new String [xTable.columns.length];
@@ -1021,8 +917,7 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
 	            		 
 	                      if (xTable.columns[i].type.equals("int")) {
 	                          int value1 = recordsFile.readInt();
-	                          searcharrWord[i]=value1+"";
-	                         
+	                          searcharrWord[i]=value1+"";	                         
 	                      } 
 	                      
 	                      else if (xTable.columns[i].type.equals("char")) {
@@ -1035,38 +930,26 @@ public static String [][] searchWordOrNuM(String colsName,String SearchText ,Str
 	                      }
 	                  }
 	            	  duplicates.add(searcharrWord);
-	             }	
-	             
+	             }		             
         	 }
-        	x+=RECORD_SIZE;
-        	
-        }
-    
-        
+        	x+=RECORD_SIZE;       	
+        }       
     } catch (IOException e) {
-        e.printStackTrace();
-       
+        e.printStackTrace();       
     }
+    
     String [][]returnDup=new String[duplicates.size()][xTable.columns.length];
     int i=0;
-    
-    
+   
     for (String[] array : duplicates) {
     	int j=0;
-    	for (String element : array) {//This loop is used to iterate through the array inside the arraylist
+    	for (String element : array) {
     		returnDup[i][j]=element;
     		j++;
         }
     	i++;
     }
-   /*for(int i =0 ; i<duplicates.size();i++) {
-	   for(int j =0 ; j<xTable.columns.length;j++) {
-		   returnDup[i][j]=duplicates.get(i).;
-	   }
-   }*/
     return returnDup;
     
-}
-
-   
-}
+ }  
+ }

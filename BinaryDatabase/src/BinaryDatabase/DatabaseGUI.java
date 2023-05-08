@@ -1,72 +1,44 @@
 package BinaryDatabase;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Scanner;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Font;
-import java.awt.Panel;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.BufferedReader;
-import java.io.EOFException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.util.ArrayList;
 import java.util.Random;
 import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import java.awt.SystemColor;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-
-import BinaryDatabase.Database.Column;
-import BinaryDatabase.Database.Table;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.ImageIcon;
-import javax.swing.JList;
-import java.awt.Window.Type;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BorderFactory;
 import javax.swing.DebugGraphics;
-
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Rectangle;
 import java.awt.Cursor;
 import java.awt.Desktop;
-
-import javax.swing.JScrollBar;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -74,7 +46,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextArea;
 import java.awt.Toolkit;
 
@@ -83,7 +54,6 @@ public class DatabaseGUI {
 
 	protected static final String NumberUtils = null;
 	private JFrame frmDatabase;
-	private JFrame frame1;
 	private JTextField tablename;
 	private JTextField columnname1;
 	private JTextField columnname2;
@@ -153,11 +123,7 @@ public class DatabaseGUI {
 	    br.close();
 	    fr.close();
 	}
-	
 
-	/**
-	 * Create the application.
-	 */
 	public class CustomCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
 		private Font font;
 
@@ -196,9 +162,6 @@ public class DatabaseGUI {
 	 * Initialize the contents of the frame.
 	 */
 	public void initialize() {
-
-		Database db = new Database();
-
 		frmDatabase = new JFrame("binary file search");
 		frmDatabase.setIconImage(Toolkit.getDefaultToolkit().getImage(DatabaseGUI.class.getResource("/icon/cool.png")));
 		frmDatabase.getContentPane().setBackground(new Color(230, 230, 250));
@@ -208,7 +171,6 @@ public class DatabaseGUI {
 		frmDatabase.setPreferredSize(new Dimension(800, 600)); // pencere boyutu
 		frmDatabase.setBounds(100, 100, 831, 628);
 		frmDatabase.getContentPane().setLayout(null);
-		
 		JPanel panel_1 = new JPanel();
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
@@ -401,7 +363,6 @@ public class DatabaseGUI {
 		datatype0.setBounds(254, 91, 101, 22);
 		newtablepanel.add(datatype0);
 
-		
 		JComboBox[] datatype = {
 
 				datatype0, datatype1, datatype2, datatype3, datatype4, datatype5, datatype6, datatype7, datatype8,
@@ -725,7 +686,7 @@ public class DatabaseGUI {
 		panel_1.setLayout(null);
 
 		//Search Panel
-		searchpanel.setBounds(43, 321, 0, 0);
+		searchpanel.setBounds(43, 321, 752, 200);
 		frmDatabase.getContentPane().add(searchpanel);
 
 		JButton btnSearchByID = new JButton("Search");
@@ -960,13 +921,8 @@ public class DatabaseGUI {
 				boolean error =false;
 				
 				if (!searchByColumText.getText().equals("") ) {
-					
-					
 					String name1 = ColNameBox.getSelectedItem().toString();
-					 
-				
-				
-					 String temp = name1.split("_")[1];
+					String temp = name1.split("_")[1];
 					
 					if(temp.equals("int")) {
 						try {
@@ -985,6 +941,7 @@ public class DatabaseGUI {
 					String selectedValue = ColNameBox.getSelectedItem().toString();
 					
 					selectedValue = selectedValue.split("_")[0];
+					System.out.println(selectedValue);
 					
 					String SearchText = searchByColumText.getText().toString();
 					String[][] arr = null;
